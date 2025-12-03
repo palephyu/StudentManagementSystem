@@ -1,0 +1,33 @@
+﻿@model StudentManagementSystem.ViewModels.Student_VM
+
+@{
+    ViewData["Title"] = "Student Details";
+}
+
+<h2>Student Details</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Student ID</th>
+        <td>@Model.StudentId</td>
+    </tr>
+    <tr>
+        <th>Name</th>
+        <td>@Model.FullName</td>
+    </tr>
+    <tr>
+        <th>Date of Birth</th>
+        <td>@Model.DateOfBirth?.ToString("yyyy-MM-dd")</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>@Model.Email</td>
+    </tr>
+    <tr>
+        <th>Class</th>
+        <td>@Model.ClassName</td>
+    </tr>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">Back</a>
+<a asp-action="Edit" asp-route-id="@Model.StudentPkid" class="btn btn-warning">Edit</a>

@@ -1,7 +1,21 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.EntityFrameworkCore;
+using StudentManagementSystem.DAO;
+using StudentManagementSystem.Repositories.Domain;
+using StudentManagementSystem.Services;
+using StudentManagementSystem.UnitOfWork;
+using System;
 
+var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration; 
+builder.Services.AddDbContext<StudentdbContext>(o => o.UseSqlServer(config.GetConnectionString("DefaultConnection")));
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork >();
+builder.Services.AddTransient<IStudentService, StudentService>();
+builder.Services.AddScoped<IClassRepository, ClassRepository>();
+//builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+
 
 var app = builder.Build();
 
