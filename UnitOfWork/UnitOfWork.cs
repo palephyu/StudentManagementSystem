@@ -45,7 +45,7 @@ namespace StudentManagementSystem.UnitOfWork
         public IUserRepository UserRepository =>
             _userRepository = _userRepository ?? new UserRepository(_context);
 
-        //public ITeacherRepository TeacherRepository => _teacherRepository = _teacherRepository ?? new TeacherRepository(_context);
+        public ITeacherRepository TeacherRepository => _teacherRepository = _teacherRepository ?? new TeacherRepository(_context);
 
         //public ICourseRepository CourseRepository =>
         //   _courseRepository ??= new CourseRepository(_context);

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.DAO;
 using StudentManagementSystem.Repositories.Domain;
@@ -6,16 +7,35 @@ using StudentManagementSystem.UnitOfWork;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
-var config = builder.Configuration; 
+var config = builder.Configuration;
+
+// DbContext
 builder.Services.AddDbContext<StudentdbContext>(o => o.UseSqlServer(config.GetConnectionString("DefaultConnection")));
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork >();
-builder.Services.AddTransient<IStudentService, StudentService>();
+
+// Add Identity services
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<StudentdbContext>()
+    .AddDefaultTokenProviders();
+
+/// Repositories
+builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IClassRepository, ClassRepository>();
-//builder.Services.AddScoped<IUserRepository, UserRepository>();
+//builder.Services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
+//builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+//builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+//builder.Services.AddScoped<IExamRepository, ExamRepository>();
+//builder.Services.AddScoped<IExamResultRepository, ExamResultRepository>();
+
+// UnitOfWork
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Services
+builder.Services.AddScoped<ITeacherService, TeacherService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
 
 
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -33,6 +53,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Middleware
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

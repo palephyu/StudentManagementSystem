@@ -8,7 +8,7 @@ namespace StudentManagementSystem.UnitOfWork
         IStudentRepository StudentRepository { get; }
         IClassRepository ClassRepository { get; }
         IUserRepository UserRepository { get; }
-        //ITeacherRepository TeacherRepository { get; }
+        ITeacherRepository TeacherRepository { get; }
         //ICourseRepository CourseRepository { get; }
         //IExamRepository ExamRepository { get; }
         //IExamResultRepository ExamResultRepository { get; }

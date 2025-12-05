@@ -1,6 +1,10 @@
-﻿namespace StudentManagementSystem.Repositories.Domain
+﻿using StudentManagementSystem.Models;
+using StudentManagementSystem.Repositories.Common;
+
+namespace StudentManagementSystem.Repositories.Domain
 {
-    public interface ITeacherRepository
+    public interface ITeacherRepository : IBaseRepository<TeacherTb>
     {
+
     }
 }
