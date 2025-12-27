@@ -38,7 +38,7 @@
                     <li><a class="dropdown-item" href="#!">Settings</a></li>
                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                     <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item" href="#!">Logout</a></li>
+                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Login">Logout</a></li>
                 </ul>
             </li>
         </ul>
@@ -70,7 +70,19 @@
                                 <a class="nav-link" asp-controller="Student" asp-action="Details">Student Details</a>
                             </nav>
                         </div>
-                       
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            TEACHER
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" asp-controller="Teacher" asp-action="Index">Teacher List</a>
+                                <a class="nav-link" asp-controller="Teacher" asp-action="Index">Add Teacher</a>
+                            </nav>
+                        </div>
+
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                             ACADEMIC
@@ -103,48 +115,35 @@
                                     </nav>
                                 </div>
 
-                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseTeachClass" aria-expanded="false" aria-controls="pagesCollapseAuth">
                                     Assign Teacher to Class
                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
-                                <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                <div class="collapse" id="pagesCollapseTeachClass" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" asp-controller="Home" asp-action="Index">Login</a>
-                                        <a class="nav-link" asp-controller="Home" asp-action="Index">Register</a>
-                                        <a class="nav-link" asp-controller="Home" asp-action="Index">Forgot Password</a>
+                                        <a class="nav-link" asp-controller="Attendance" asp-action="Index">Attendance</a>
+                                        <a class="nav-link" asp-controller="Enrollment" asp-action="Index">Enrollment</a>                    
                                     </nav>
                                 </div>
 
                             </nav>
                         </div>
 
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            TEACHER
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" asp-controller="Teacher" asp-action="Index">Teacher List</a>
-                                <a class="nav-link" asp-controller="Teacher" asp-action="Index">Add Teacher</a>
-                            </nav>
-                        </div>
-
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseExam" aria-expanded="false" aria-controls="collapsePages">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                             EXAMS
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                        <div class="collapse" id="collapseExam" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseExamlist" aria-expanded="false" aria-controls="pagesCollapseAuth">
                                     Exam List
                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
-                                <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                <div class="collapse" id="pagesCollapseExamlist" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" asp-controller="Home" asp-action="Index">Login</a>
-                                        <a class="nav-link" asp-controller="Home" asp-action="Index">Register</a>
+                                        <a class="nav-link" asp-controller="Home" asp-action="Index">Exam</a>
+                                        <a class="nav-link" asp-controller="ExamResult" asp-action="Index">ExamResult</a>
                                         <a class="nav-link" asp-controller="Home" asp-action="Index">Forgot Password</a>
                                     </nav>
                                 </div>
@@ -162,7 +161,7 @@
                                 </div>
 
                                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
-                                    View Result
+                                    Exam Result
                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
                                 <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
@@ -176,6 +175,20 @@
 
                             </nav>
                         </div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseuser" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            USERS
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseuser" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" asp-controller="User" asp-action="Index">User List</a>
+                                <a class="nav-link" asp-controller="User" asp-action="Create">Add User</a>
+                                <a class="nav-link" asp-controller="User" asp-action="Details">User Roles</a>
+                            </nav>
+                        </div>
+
 
                         <div class="sb-sidenav-menu-heading">SYSTEM</div>
                         <a class="nav-link" asp-controller="Home" asp-action="Index">

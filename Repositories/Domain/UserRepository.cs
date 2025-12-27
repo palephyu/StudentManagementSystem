@@ -1,5 +1,7 @@
-﻿using StudentManagementSystem.DAO;
+﻿using Microsoft.EntityFrameworkCore;
+using StudentManagementSystem.DAO;
 using StudentManagementSystem.Models;
+using StudentManagementSystem.ViewModels;
 
 namespace StudentManagementSystem.Repositories.Domain
 {
@@ -11,10 +13,12 @@ namespace StudentManagementSystem.Repositories.Domain
             _studentdbContext = context;
 
         }
-
-        public Task<UserTb> CreateAsync()
+        public IQueryable<UserTb> GetAll()
         {
-            throw new NotImplementedException();
+            return _studentdbContext.UserTbs.AsQueryable();
         }
+
+
+
     }
 }

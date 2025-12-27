@@ -9,11 +9,11 @@ namespace StudentManagementSystem.UnitOfWork
         IClassRepository ClassRepository { get; }
         IUserRepository UserRepository { get; }
         ITeacherRepository TeacherRepository { get; }
-        //ICourseRepository CourseRepository { get; }
-        //IExamRepository ExamRepository { get; }
-        //IExamResultRepository ExamResultRepository { get; }
-        //IAttendanceRepository AttendanceRepository { get; }
-        //IEnrollmentRepository EnrollmentRepository { get; }
+        ICourseRepository CourseRepository { get; }
+        IExamRepository ExamRepository { get; }
+        IExamResultRepository ExamResultRepository { get; }
+        IAttendanceRepository AttendanceRepository { get; }
+     //   IEnrollmentRepository EnrollmentRepository { get; }
         Task Commit();       
         void RollBack();
     }

@@ -1,0 +1,129 @@
+﻿@model StudentManagementSystem.ViewModels.User_VM
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] Login</title>
+    <link href="~/img/student logo.png" rel="icon" />
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: #0a7c96;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container {
+            background: #ffffff;
+            width: 420px;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: normal;
+        }
+
+        label {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .show-password {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .btn-login {
+            width: 100%;
+            background-color: #0a7c96;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            font-size: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-login:hover {
+            background-color: #075f73;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #0a7c96;
+            text-decoration: none;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Login</h2>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="error">@ViewBag.Error</div>
+        }
+
+        <form asp-action="Login" method="post">
+            <label>Email:</label>
+            <input asp-for="Username" type="text" placeholder="Enter email" />
+
+            <label>Password:</label>
+            <input asp-for="Password" type="password" id="password" placeholder="Enter password" />
+
+            <div class="show-password">
+                <input type="checkbox" onclick="togglePassword()" /> Show Password
+            </div>
+
+            <button type="submit" class="btn-login">SIGN IN</button>
+        </form>
+
+        <div class="footer">
+            <p>Forgot <a href="#">Username</a> / <a href="#">Password</a>?</p>
+            <p>Don't have an account? <a href="#">Sign up</a></p>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            var pwd = document.getElementById("password");
+            pwd.type = pwd.type === "password" ? "text" : "password";
+        }
+    </script>
+
+</body>
+</html>

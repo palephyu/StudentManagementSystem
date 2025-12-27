@@ -1,6 +1,9 @@
-﻿namespace StudentManagementSystem.Repositories.Domain
+﻿using StudentManagementSystem.Models;
+using StudentManagementSystem.Repositories.Common;
+
+namespace StudentManagementSystem.Repositories.Domain
 {
-    public interface ICourseRepository
+    public interface ICourseRepository : IBaseRepository<CourseTb>
     {
     }
 }

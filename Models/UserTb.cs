@@ -12,4 +12,6 @@ public partial class UserTb
     public string? UserType { get; set; }
 
     public int? Password { get; set; }
+
+    public string? Role { get; set; }
 }

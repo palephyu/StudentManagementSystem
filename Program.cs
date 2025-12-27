@@ -4,6 +4,7 @@ using StudentManagementSystem.DAO;
 using StudentManagementSystem.Repositories.Domain;
 using StudentManagementSystem.Services;
 using StudentManagementSystem.UnitOfWork;
+using StudentManagementSystem.Controllers;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,12 +21,13 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 /// Repositories
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IClassRepository, ClassRepository>();
 //builder.Services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
-//builder.Services.AddScoped<ICourseRepository, CourseRepository>();
-//builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
-//builder.Services.AddScoped<IExamRepository, ExamRepository>();
-//builder.Services.AddScoped<IExamResultRepository, ExamResultRepository>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+builder.Services.AddScoped<IExamRepository, ExamRepository>();
+builder.Services.AddScoped<IExamResultRepository, ExamResultRepository>();
 
 // UnitOfWork
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -33,11 +35,24 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // Services
 builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+
+
+// Configure Session
+builder.Services.AddSession();
 
 
 builder.Services.AddControllersWithViews();
 
+// register WeatherApiService and HttpClient
+builder.Services.AddHttpClient<StudentManagementSystem.Services.WeatherApiService>();
+
+
 var app = builder.Build();
+
+//HTTPClient for API url
+//builder.Services.AddHttpClient<StudentController>();
 
 
 // Configure the HTTP request pipeline.
@@ -57,8 +72,12 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Use Session
+app.UseSession();
+
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();

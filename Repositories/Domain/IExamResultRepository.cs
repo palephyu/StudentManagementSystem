@@ -1,6 +1,10 @@
-﻿namespace StudentManagementSystem.Repositories.Domain
+﻿using StudentManagementSystem.Models;
+using StudentManagementSystem.Repositories.Common;
+
+namespace StudentManagementSystem.Repositories.Domain
 {
-    public interface IExamResultRepository
+    public interface IExamResultRepository : IBaseRepository<ExamResultTb>
     {
+            
     }
 }

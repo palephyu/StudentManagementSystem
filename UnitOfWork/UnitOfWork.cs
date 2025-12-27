@@ -14,7 +14,7 @@ namespace StudentManagementSystem.UnitOfWork
         public ICourseRepository _courseRepository;
         public IEnrollmentRepository _enrollmentRepository;
         public ITeacherRepository _teacherRepository; 
-        public IExamRepository _examResultRepository;
+        public IExamResultRepository _examResultRepository;
         public IExamRepository _examRepository;
         public IUserRepository _userRepository;
         public IAttendanceRepository _attendanceRepository;
@@ -42,25 +42,20 @@ namespace StudentManagementSystem.UnitOfWork
             }
         }
 
-        public IUserRepository UserRepository =>
-            _userRepository = _userRepository ?? new UserRepository(_context);
+        public IUserRepository UserRepository =>_userRepository = _userRepository ?? new UserRepository(_context);
 
         public ITeacherRepository TeacherRepository => _teacherRepository = _teacherRepository ?? new TeacherRepository(_context);
 
-        //public ICourseRepository CourseRepository =>
-        //   _courseRepository ??= new CourseRepository(_context);
+        public ICourseRepository CourseRepository => _courseRepository ??= new CourseRepository(_context);
 
-        //public IExamRepository ExamRepository =>
-        //    _examRepository ??= new ExamRepository(_context);
+        public IExamRepository ExamRepository => _examRepository ??= new ExamRepository(_context);
 
-        //public IExamResultRepository ExamResultRepository =>
-        //    _examResultRepository ??= new ExamResultRepository(_context);
+        public IExamResultRepository ExamResultRepository => _examResultRepository = _examResultRepository ?? new ExamResultRepository(_context);
 
-        //public IAttendanceRepository AttendanceRepository =>
-        //    _attendanceRepository ??= new AttendanceRepository(_context);
+        public IAttendanceRepository AttendanceRepository =>_attendanceRepository ??= new AttendanceRepository(_context);
 
-        //public IEnrollmentRepository EnrollmentRepository =>
-            //_enrollmentRepository ??= new EnrollmentRepository(_context);
+       //public IEnrollmentRepository EnrollmentRepository => _enrollmentRepository ??= new EnrollmentRepository(_context);
+
 
         public async Task Commit()
         {

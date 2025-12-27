@@ -1,0 +1,35 @@
+﻿@model IEnumerable<StudentManagementSystem.ViewModels.User_VM>
+
+<h2>User Management (Admin)</h2>
+
+<a asp-action="Create" class="btn btn-primary">➕ Create New User</a>
+
+<br />
+<br />
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th style="width:200px">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Username</td>
+                <td>@item.Role</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.UserPkid"
+                       class="btn btn-warning btn-sm">Edit</a>
+
+                    <a asp-action="Delete" asp-route-id="@item.UserPkid"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

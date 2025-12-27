@@ -1,8 +1,45 @@
-﻿@{
+﻿@model StudentManagementSystem.Services.WeatherDto?
+
+@{
     ViewData["Title"] = "Home Page";
 }
+
+
+
 <!-- Main Content -->
 <main class="pb-3">
+ 
+@* 
+<h2>Weather information</h2>
+
+<form method="get" asp-action="Weather">
+    <div class="input-group mb-3" style="max-width:400px;">
+        <input name="city" class="form-control" placeholder="Enter city" />
+        <button class="btn btn-primary" type="submit">Get</button>
+    </div>
+</form> 
+
+@if (Model == null)
+{
+    <div class="alert alert-warning">Weather data not available for this city or service error.</div>
+}
+else
+{
+    <div class="card" style="max-width: 420px;">
+        <div class="card-body">
+            <h4 class="card-title">@Model.City</h4>
+            <p class="card-text">
+                <strong>Temperature:</strong> @Model.Temperature °C <br />
+                <strong>Feels Like:</strong> @Model.FeelsLike °C <br />
+                <strong>Humidity:</strong> @Model.Humidity% <br />
+                <strong>Weather:</strong> @Model.Weather <br />
+            </p>
+            @* <img src="https://openweathermap.org/img/wn/@Model. alt="icon" /> 
+        </div>
+    </div>
+    }*@
+
+
     <div class="container-fluid px-4">
         <h1 class="mt-4">Dashboard</h1>
         <ol class="breadcrumb mb-4">
@@ -555,5 +592,7 @@
             </div>
         </div>
     </div>
+
+
 </main>
 <!--End Main Content -->
