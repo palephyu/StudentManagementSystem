@@ -68,7 +68,8 @@ StudentManagementSystem
 ├── Models
 │   └── Student.cs
 │
-├── ViewModels
+├── ViewModels<img width="958" height="437" alt="SMSloginform" src="https://github.com/user-attachments/assets/f3d9f575-fd20-460f-9867-0524bdd31a3c" />
+
 │   └── StudentViewModel.cs
 │
 ├── Services
