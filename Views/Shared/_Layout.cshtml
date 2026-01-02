@@ -188,7 +188,34 @@
                                 <a class="nav-link" asp-controller="User" asp-action="Details">User Roles</a>
                             </nav>
                         </div>
+                       
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsecourse" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            Course
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapsecourse" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" asp-controller="Course" asp-action="Index">Course List</a>
+                                <a class="nav-link" asp-controller="Course" asp-action="Create">Add Course</a>
+                                <a class="nav-link" asp-controller="Course" asp-action="Details">Course Roles</a>
+                            </nav>
+                        </div>
 
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseclass" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            Class
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseclass" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" asp-controller="Class" asp-action="Index">Class List</a>
+                                <a class="nav-link" asp-controller="Class" asp-action="Create">Add Class</a>
+                                <a class="nav-link" asp-controller="Class" asp-action="Details">Update Class</a>
+                            </nav>
+                        </div>
+
+                        
 
                         <div class="sb-sidenav-menu-heading">SYSTEM</div>
                         <a class="nav-link" asp-controller="Home" asp-action="Index">

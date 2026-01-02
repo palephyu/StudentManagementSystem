@@ -37,10 +37,10 @@ namespace StudentManagementSystem.Controllers
                 return RedirectToAction("Index", "Home");
 
             if (user.Role == "Teacher")
-                return RedirectToAction("Index", "Teacher");
+                return RedirectToAction("TeacherDashboard", "Dashboard");
 
             if (user.Role == "Student")
-                return RedirectToAction("Index", "Student");
+                return RedirectToAction("StudentDashboard", "Dashboard");
 
             return View();
         }

@@ -1,6 +1,7 @@
 ﻿namespace StudentManagementSystem.Services
 {
-    public class ClassService
+    public class ClassService : IClassService
     {
+        // Implement IClassService members here
     }
 }

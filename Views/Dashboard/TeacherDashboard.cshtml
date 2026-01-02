@@ -1,0 +1,185 @@
+﻿@{
+    ViewData["Title"] = "Teacher Dashboard";
+    Layout = "_TeacherLayout";
+}
+
+<div class="container">
+
+    <div class="container-fluid p-0">
+        <h4 class="fw-bold mb-4">Teacher Dashboard</h4>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card bg-purple-gradient">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="small opacity-75">Total Income</span>
+                        <span class="badge-percentage bg-white text-primary">80%</span>
+                    </div>
+                    <h3 class="fw-bold">$68,05090</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">Total Income</span>
+                        <span class="badge-percentage">80%</span>
+                    </div>
+                    <h3 class="fw-bold">$68,05090</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">Total Exams</span>
+                        <span class="badge-percentage bg-danger-subtle text-danger">80%</span>
+                    </div>
+                    <h3 class="fw-bold">250,736</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">Students</span>
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </div>
+                    <div class="text-center py-2">
+                        <div class="rounded-circle border border-5 border-primary mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <span class="fw-bold">15k</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="table-custom">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold">Star Students</h5>
+                        <i class="bi bi-three-dots"></i>
+                    </div>
+                    <table class="table table-borderless align-middle">
+                        <thead class="text-muted small">
+                            <tr>
+                                <th>Name</th>
+                                <th>ID</th>
+                                <th>Marks</th>
+                                <th>Percent</th>
+                                <th>Year</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <img src="https://i.pravatar.cc/150?u=1" class="avatar-img me-2">
+                                    <span class="fw-medium">Evelyn Harper</span>
+                                </td>
+                                <td>PRE43178</td>
+                                <td>1185</td>
+                                <td>98%</td>
+                                <td>2024</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="https://i.pravatar.cc/150?u=2" class="avatar-img me-2">
+                                    <span class="fw-medium">John Miller</span>
+                                </td>
+                                <td>PRE43187</td>
+                                <td>1175</td>
+                                <td>92%</td>
+                                <td>2024</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="table-custom">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5 class="fw-bold">Notifications</h5>
+                        <a href="#" class="text-decoration-none small">View All</a>
+                    </div>
+                    <div class="d-flex flex-column gap-3">
+                        <div class="d-flex gap-3">
+                            <div class="bg-light rounded p-2 text-center" style="width: 50px;">
+                                <i class="bi bi-megaphone-fill text-danger"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold small">Emergency School Closure</div>
+                                <div class="text-muted" style="font-size: 11px;">15 Aug • 4:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <div class="bg-light rounded p-2 text-center" style="width: 50px;">
+                                <i class="bi bi-calendar-check text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold small">School Picture Day</div>
+                                <div class="text-muted" style="font-size: 11px;">16 Aug • 9:00 AM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row g-4 mb-4 mt-3">
+
+        <!-- Manage Classes -->
+        <div class="col-md-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Classes</h5>
+                    <p class="card-text">
+                        Create and manage your classes
+                    </p>
+                    <a asp-controller="Class"
+                       asp-action="Index"
+                       class="btn btn-primary">
+                        Manage
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Students -->
+        <div class="col-md-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Students</h5>
+                    <p class="card-text">
+                        View students under your classes
+                    </p>
+                    <a asp-controller="Student"
+                       asp-action="Index"
+                       class="btn btn-success">
+                        View
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grades & Attendance -->
+        <div class="col-md-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Grades & Attendance</h5>
+                    <p class="card-text">
+                        Update student records
+                    </p>
+                    <a asp-controller="Grade"
+                       asp-action="Index"
+                       class="btn btn-warning">
+                        Update
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>

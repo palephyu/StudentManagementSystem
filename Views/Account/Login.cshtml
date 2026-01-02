@@ -86,12 +86,38 @@
             text-align: center;
             margin-bottom: 15px;
         }
+
+        .logo-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%; /* makes it circle */
+            object-fit: cover; /* keeps image proportion */
+            border: 3px solid #0d6efd; /* optional border */
+            background-color: #fff;
+            text-align: center;
+        }
+
+        .text-center {
+            text-align: center;
+        } 
+
     </style>
 </head>
 <body>
 
     <div class="login-container">
-        <h2>Login</h2>
+
+        <div class="text-center mb-3">
+            <img src="~/img/student logo.png"
+                 alt="Logo"
+                 class="logo-circle" />
+        </div>
+
+        <h2 class="text-center mb-4">Login Form</h2>
+
+        
+
+
 
         @if (ViewBag.Error != null)
         {

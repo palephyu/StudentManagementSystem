@@ -1,5 +1,45 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<StudentManagementSystem.Models.ClassTb>
+
 @{
+    ViewData["Title"] = "Class List";
 }
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h3>Class List</h3>
+        <a asp-action="Create" class="btn btn-primary">+ Add Class</a>
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>#</th>
+                <th>Class Name</th>
+                <th>Year</th>
+                <th>Student ID</th>
+                <th>Teacher ID</th>
+                <th style="width:180px;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 1;
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center">@i</td>
+                    <td>@item.ClassName</td>
+                    <td class="text-center">@item.Year</td>
+                    <td class="text-center">@item.StudentPkid</td>
+                    <td class="text-center">@item.TeacherPkid</td>
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@item.Classpkid" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Classpkid" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+</div>
