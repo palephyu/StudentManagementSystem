@@ -154,3 +154,6 @@ This project is created for **educational purposes** only.
 ⭐ If you like this project, feel free to star the repository!
 <h3>Admin UI</h3>
 <img width="958" height="437" alt="SMSloginform" src="https://github.com/user-attachments/assets/cf20cc74-ba39-4749-aec2-3b9972257511" />
+------------------------------------------------
+## 📄 Teacher UI
+<img width="958" height="437" alt="Teacher" src="https://github.com/user-attachments/assets/48930663-1734-4124-8aae-109e6be237ba" />
