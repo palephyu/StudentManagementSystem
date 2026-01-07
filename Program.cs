@@ -39,6 +39,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IClassService, ClassService>();
 
+//httpclient for external API
+builder.Services.AddHttpClient();
 
 
 // Configure Session
@@ -73,6 +75,7 @@ app.UseRouting();
 // Middleware
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 // Use Session
 app.UseSession();

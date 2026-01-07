@@ -37,6 +37,11 @@ namespace StudentManagementSystem.Repositories.Domain
                         FullName = s.FullName,
                         DateOfBirth = s.DateOfBirth,
                         Email = s.Email,
+                        Address = s.Address,
+                        Phone = s.Phone,
+                        Gender = s.Gender,
+                        ImagePath = s.ImagePath,
+                        //EnrollmentDate = DateOnly.FromDateTime(DateTime.Now),
                         Classpkid = id,
                         ClassName = c != null ? c.ClassName : null
                     };

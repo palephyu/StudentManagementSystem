@@ -18,6 +18,8 @@ namespace StudentManagementSystem.ViewModels
         public string? Address { get; set; }
         public DateTime EnrollmentDate { get; set; }
         public string? ImagePath { get; set; }
+        //ImageFile
+        public IFormFile? ImageFile { get; set; }
 
         // Relations
         public int Classpkid { get; set; }

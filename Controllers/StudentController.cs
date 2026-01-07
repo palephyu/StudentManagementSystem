@@ -35,7 +35,35 @@ namespace StudentManagementSystem.Controllers
         public async Task<IActionResult> Create(Student_VM vm) 
         { 
             await _service.CreateAsync(vm); 
-            return RedirectToAction("Index"); }
+            return RedirectToAction("Index"); 
+        }
+
+        //ွGET:Edit
+        public async Task<IActionResult> Edit(int id)
+        {
+            var student = await _service.GetByIdAsync(id);
+            return View(student);
+        }
+        //POST:Edit
+        [HttpPost]
+        public async Task<IActionResult> Edit(Student_VM vm)
+        {
+            await _service.UpdateAsync(vm);
+            return RedirectToAction("Index");
+        }
+        //GET:Delete
+        public async Task<IActionResult> Delete(int id)
+        {
+            var student = await _service.GetByIdAsync(id);
+            return View(student);
+        }
+        //POST:Delete
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await _service.DeleteAsync(id);
+            return RedirectToAction("Index");
+        }
     }
 
 }

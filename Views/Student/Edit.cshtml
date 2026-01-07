@@ -1,29 +1,38 @@
 ﻿@model StudentManagementSystem.ViewModels.Student_VM
 
 @{
-    ViewData["Title"] = "Create Student";
+    ViewData["Title"] = "Edit Student";
 }
 
-<h2>Create Student</h2>
+<h2>Edit Student</h2>
 
-<form asp-action="Create" method="post" class="mt-1">
+<form asp-action="Edit" method="post" enctype="multipart/form-data" class="mt-1">
+    <input type="hidden" asp-for="StudentPkid" />
+    <input type="hidden" asp-for="ImagePath" />
+
     <div asp-validation-summary="All" class="text-danger"></div>
 
+    <!-- Student ID -->
     <div class="mb-3">
         <label asp-for="StudentId" class="form-label"></label>
-        <input asp-for="StudentId" class="form-control" />
-        <span asp-validation-for="StudentId" class="text-danger"></span>
+        <input asp-for="StudentId" class="form-control" readonly />
     </div>
+
+    <!-- Full Name -->
     <div class="mb-3">
         <label asp-for="FullName" class="form-label"></label>
         <input asp-for="FullName" class="form-control" />
         <span asp-validation-for="FullName" class="text-danger"></span>
     </div>
+
+    <!-- Date of Birth -->
     <div class="mb-3">
         <label asp-for="DateOfBirth" class="form-label"></label>
         <input asp-for="DateOfBirth" type="date" class="form-control" />
         <span asp-validation-for="DateOfBirth" class="text-danger"></span>
     </div>
+
+    <!-- Gender -->
     <div class="mb-3">
         <label class="form-label">Gender</label>
         <div>
@@ -54,34 +63,59 @@
 
         <span asp-validation-for="Gender" class="text-danger"></span>
     </div>
+
+    <!-- Email -->
     <div class="mb-3">
         <label asp-for="Email" class="form-label"></label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
+
+    <!-- Phone -->
     <div class="mb-3">
         <label asp-for="Phone" class="form-label"></label>
         <input asp-for="Phone" class="form-control" />
         <span asp-validation-for="Phone" class="text-danger"></span>
     </div>
+
+    <!-- Address -->
     <div class="mb-3">
         <label asp-for="Address" class="form-label"></label>
         <textarea asp-for="Address" class="form-control" rows="3"></textarea>
         <span asp-validation-for="Address" class="text-danger"></span>
     </div>
+
+    <!-- Enrollment Date -->
     <div class="mb-3">
         <label asp-for="EnrollmentDate" class="form-label"></label>
         <input asp-for="EnrollmentDate" type="date" class="form-control" />
         <span asp-validation-for="EnrollmentDate" class="text-danger"></span>
     </div>
+
+    <!-- Current Image -->
+    @if (!string.IsNullOrEmpty(Model.ImagePath))
+    {
+        <div class="mb-3">
+            <label class="form-label">Current Photo</label><br />
+            <img src="@Model.ImagePath"
+                 class="rounded border"
+                 width="120"
+                 height="120" />
+        </div>
+    }
+
+    <!-- Upload New Image -->
     <div class="mb-3">
-        <label class="form-label">Student Photo</label>
+        <label class="form-label">Change Photo</label>
         <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+        <small class="text-muted">Leave empty to keep current photo</small>
         <span asp-validation-for="ImageFile" class="text-danger"></span>
     </div>
 
-    <button class="btn btn-success">Save</button>
+    <!-- Buttons -->
+    <button class="btn btn-primary">Update</button>
     <a asp-action="Index" class="btn btn-secondary">Back</a>
+
 </form>
 
 @section Scripts {

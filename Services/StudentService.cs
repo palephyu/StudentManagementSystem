@@ -25,7 +25,11 @@ namespace StudentManagementSystem.Services
                 FullName = s.FullName,
                 DateOfBirth = s.DateOfBirth,
                 Email = s.Email,
-
+                Address = s.Address,
+                Phone = s.Phone,
+                Gender = s.Gender,
+                ImagePath = s.ImagePath,
+              // EnrollmentDate = DateOnly.FromDateTime(DateTime.Now), // Fixed: use 'DateOnly' (capital D)
             }).ToList();
         }
 
@@ -42,6 +46,11 @@ namespace StudentManagementSystem.Services
                 FullName = student.FullName,
                 Email = student.Email,
                 DateOfBirth = student.DateOfBirth,
+                Address = student.Address,
+                Phone = student.Phone,
+                Gender = student.Gender,
+                ImagePath = student.ImagePath,
+                EnrollmentDate = student.EnrollmentDate,
 
             };
         }
@@ -54,12 +63,16 @@ namespace StudentManagementSystem.Services
                 FullName = vm.FullName,
                 StudentId = vm.StudentId,
                 DateOfBirth = vm.DateOfBirth,
+                Gender = vm.Gender,
+                Address = vm.Address,
+                Phone = vm.Phone,
+                ImagePath = vm.ImagePath,
                 Email = vm.Email,
-
+                EnrollmentDate = DateOnly.FromDateTime(DateTime.Now), // Fixed: use 'DateOnly' (capital D)
             };
 
             await _unitofwork.StudentRepository.CreateAsync(entity);
-            _unitofwork.Commit();
+            await _unitofwork.Commit();
         }
 
         // ------------------------ Update -------------------------
@@ -72,7 +85,11 @@ namespace StudentManagementSystem.Services
             entity.FullName = vm.FullName;
             entity.DateOfBirth = vm.DateOfBirth;
             entity.Email = vm.Email;
-
+            entity.Address = vm.Address;
+            entity.Phone = vm.Phone;
+            entity.ImagePath = vm.ImagePath;
+            entity.Gender = vm.Gender;
+            entity.EnrollmentDate = DateOnly.FromDateTime(DateTime.Now); // Fixed: use 'DateOnly' (capital D)
 
             _unitofwork.StudentRepository.Update(entity);
             _unitofwork.Commit();

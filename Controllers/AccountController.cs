@@ -32,6 +32,10 @@ namespace StudentManagementSystem.Controllers
                 return View();
             }
 
+            // ✅ Save Role to Session
+            HttpContext.Session.SetString("UserRole", user.Role);
+            HttpContext.Session.SetString("Username", user.Username);
+
             // 🔀 Role-based Redirect
             if (user.Role == "Admin")
                 return RedirectToAction("Index", "Home");
