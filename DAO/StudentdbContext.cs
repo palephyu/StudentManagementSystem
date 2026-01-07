@@ -35,9 +35,9 @@ public partial class StudentdbContext : DbContext
     public virtual DbSet<UserTb> UserTbs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=desktop-fevs92l\\sqlexpress; Database=SMSystem; User Id=sms; Password=sms@dmin123;Trust Server Certificate=true");
-
+    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+    //  => optionsBuilder.UseSqlServer("Server=desktop-fevs92l\\sqlexpress; Database=SMSystem; User Id=sms; Password=sms@dmin123;Trust Server Certificate=true");
+    => optionsBuilder.UseSqlServer("Server=StudentDB.mssql.somee.com;Database=StudentDB;User Id=palephyu_SQLLogin_1;Password=Student@123;TrustServerCertificate=True;");
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AttendanceTb>(entity =>

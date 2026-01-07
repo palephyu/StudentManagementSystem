@@ -10,6 +10,9 @@ using System;
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
+// Set environment to Development for detailed error pages in development server
+builder.Environment.EnvironmentName = "Development";
+
 // DbContext
 builder.Services.AddDbContext<StudentdbContext>(o => o.UseSqlServer(config.GetConnectionString("DefaultConnection")));
 
