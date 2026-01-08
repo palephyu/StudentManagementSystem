@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<StudentManagementSystem.ViewModels.Student_VM>
-@using Microsoft.AspNetCore.Http
+
 @{
     ViewData["Title"] = "Student List";
 }
-
+@using Microsoft.AspNetCore.Http
 @{
     var role = Context.Session.GetString("UserRole");
 

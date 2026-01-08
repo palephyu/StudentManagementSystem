@@ -2,6 +2,19 @@
 @{
     ViewData["Title"] = "Teachers";
 }
+@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("UserRole");
+
+    if (role == "Teacher")
+    {
+        Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml"; // Admin or others
+    }
+}
 <h2>Teachers</h2>
 
 <p><a asp-action="Create" class="btn btn-primary">Create New Teacher</a></p>

@@ -1,0 +1,35 @@
+﻿@model List<StudentTb>
+
+
+<h2>Student List</h2>
+
+<a class="btn btn-primary mb-3" asp-action="Create">Add New</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>StudentId</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th width="200">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.StudentPkid</td>
+                <td>@s.StudentId</td>
+                <td>@s.FullName</td>
+                <td>@s.Email</td>
+                <td>@s.Phone</td>
+                <td>
+                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@s.StudentPkid">Edit</a>
+                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@s.StudentPkid">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

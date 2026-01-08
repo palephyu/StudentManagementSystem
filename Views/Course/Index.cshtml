@@ -4,6 +4,24 @@
     ViewData["Title"] = "Course List";
 }
 
+@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("UserRole");
+
+    if (role == "Teacher")
+    {
+        Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+    }
+    else if (role == "Student")
+    {
+        Layout = "~/Views/Shared/_StudentLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml"; // Admin or others
+    }
+}
+
 <div class="container mt-4">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
