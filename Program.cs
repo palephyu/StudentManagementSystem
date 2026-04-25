@@ -13,10 +13,13 @@ var config = builder.Configuration;
 // Set environment to Development for detailed error pages in development server
 builder.Environment.EnvironmentName = "Development";
 
-// DbContext
-builder.Services.AddDbContext<StudentdbContext>(o => o.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+// 1.DbContext  Database Connection ???????
+builder.Services.AddDbContext<StudentdbContext>(o => o.UseSqlServer(config.GetConnectionString("Test")));
 
-// Add Identity services
+// 2. Unit of Work ??? Register ???????
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// 3. Service ?????? Register ??????? Add Identity services
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<StudentdbContext>()
     .AddDefaultTokenProviders();
@@ -32,8 +35,7 @@ builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 builder.Services.AddScoped<IExamRepository, ExamRepository>();
 builder.Services.AddScoped<IExamResultRepository, ExamResultRepository>();
 
-// UnitOfWork
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 // Services
 builder.Services.AddScoped<ITeacherService, TeacherService>();
@@ -41,6 +43,7 @@ builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IClassService, ClassService>();
+builder.Services.AddScoped<IExamService, ExamService>();
 
 //httpclient for external API
 builder.Services.AddHttpClient();
@@ -49,7 +52,7 @@ builder.Services.AddHttpClient();
 // Configure Session
 builder.Services.AddSession();
 
-
+// 4. Controllers ??? Register ???????
 builder.Services.AddControllersWithViews();
 
 // register WeatherApiService and HttpClient
@@ -70,6 +73,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// Middleware Pipeline
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

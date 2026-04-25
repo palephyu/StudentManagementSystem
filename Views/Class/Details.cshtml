@@ -1,0 +1,521 @@
+﻿@model StudentManagementSystem.ViewModels.ClassDetail_VM
+
+@{
+    ViewData["Title"] = "အတန်းအသေးစိတ်";
+}
+
+@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("UserRole");
+
+    if (role == "Teacher")
+    {
+        Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+        <h2>
+            <i class="fas fa-chalkboard"></i> အတန်းအသေးစိတ်
+        </h2>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.ClassPkid" class="btn btn-warning">
+                <i class="fas fa-edit"></i> ပြင်ဆင်ရန်
+            </a>
+            <a asp-action="Delete" asp-route-id="@Model.ClassPkid" class="btn btn-danger">
+                <i class="fas fa-trash"></i> ဖျက်ရန်
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> စာရင်းသို့ပြန်သွားရန်
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Main Content -->
+    <div class="row">
+        <!-- Class Information Column -->
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle"></i> အတန်းအချက်အလက်များ
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 40%;">အတန်း ID</th>
+                            <td>
+                                <span class="badge bg-secondary">@Model.ClassPkid</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>အတန်းအမည်</th>
+                            <td>
+                                <strong class="text-primary">@Model.ClassName</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>အပိုင်း</th>
+                            <td>
+                                <span class="badge bg-info">@(Model.Section ?? "N/A")</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>သင်နှစ်</th>
+                            <td>@(Model.Year ?? DateTime.Now.Year)</td>
+                        </tr>
+                        <tr>
+                            <th>အတန်းပိုင်ဆရာ</th>
+                            <td>
+                                @if (!string.IsNullOrEmpty(Model.TeacherName))
+                                {
+                                    <i class="fas fa-user-check text-success"></i> 
+                                    @Model.TeacherName
+                                }
+                                else
+                                {
+                                    <span class="text-muted">သတ်မှတ်မထားပါ</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>အခြေအနေ</th>
+                            <td>
+                                @if (Model.IsDeleted == true)
+                                {
+                                    <span class="badge bg-danger">ဖျက်ထားသည်</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">အသက်ဝင်သည်</span>
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Statistics Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar"></i> စာရင်းအင်းများ
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="border rounded p-3">
+                                <h2 class="text-primary mb-0">@Model.TotalStudents</h2>
+                                <small class="text-muted">စုစုပေါင်းကျောင်းသား</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="border rounded p-3">
+                                <h2 class="text-success mb-0">@Model.TotalCourses</h2>
+                                <small class="text-muted">စုစုပေါင်းသင်တန်း</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Information Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history"></i> စနစ်အချက်အလက်များ
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <tr>
+                            <th>ဖန်တီးသူ</th>
+                            <td>@(Model.CreatedBy ?? "N/A")</td>
+                        </tr>
+                        <tr>
+                            <th>ဖန်တီးသည့်ရက်</th>
+                            <td>@(Model.CreatedDate?.ToString("yyyy-MM-dd HH:mm") ?? "N/A")</td>
+                        </tr>
+                        @if (!string.IsNullOrEmpty(Model.ModifiedBy))
+                        {
+                            <tr>
+                                <th>ပြင်ဆင်သူ</th>
+                                <td>@Model.ModifiedBy</td>
+                            </tr>
+                            <tr>
+                                <th>ပြင်ဆင်သည့်ရက်</th>
+                                <td>@(Model.ModifiedDate?.ToString("yyyy-MM-dd HH:mm") ?? "N/A")</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students List Column -->
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users"></i> ကျောင်းသားများ (@Model.TotalStudents)
+                    </h5>
+                    <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                        <i class="fas fa-plus"></i> ကျောင်းသားထည့်ရန်
+                    </button>
+                </div>
+                <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                    @if (Model.Students != null && Model.Students.Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var student in Model.Students)
+                            {
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="fas fa-user-graduate text-primary"></i>
+                                            <strong>@student.FullName</strong>
+                                            <br />
+                                            <small class="text-muted">
+                                                <i class="fas fa-id-card"></i> @student.StudentId
+                                            </small>
+                                            <br />
+                                            <small>
+                                                <i class="fas fa-envelope"></i> @student.Email
+                                            </small>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-danger"
+                                                onclick="removeStudent(@Model.ClassPkid, @student.StudentPkid, '@student.FullName')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-info-circle"></i>
+                            <p class="mb-0">ကျောင်းသားများ မရှိသေးပါ။</p>
+                            <small>အပေါ်ရှိ ခလုတ်ကို နှိပ်ပြီး ကျောင်းသားများ ထည့်သွင်းပါ။</small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Courses List Column -->
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-book"></i> သင်တန်းများ (@Model.TotalCourses)
+                    </h5>
+                    <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addCourseModal">
+                        <i class="fas fa-plus"></i> သင်တန်းထည့်ရန်
+                    </button>
+                </div>
+                <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                    @if (Model.Courses != null && Model.Courses.Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var course in Model.Courses)
+                            {
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="fas fa-book-open text-success"></i>
+                                            <strong>@course.CourseName</strong>
+                                            <br />
+                                            <small class="text-muted">
+                                                <i class="fas fa-code"></i> @course.CourseCode
+                                            </small>
+                                            <br />
+                                            <small>
+                                                <i class="fas fa-star"></i> Credits: @course.Credits
+                                            </small>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-danger"
+                                                onclick="removeCourse(@Model.ClassPkid, @course.CoursePkid, '@course.CourseName')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-info-circle"></i>
+                            <p class="mb-0">သင်တန်းများ မရှိသေးပါ။</p>
+                            <small>အပေါ်ရှိ ခလုတ်ကို နှိပ်ပြီး သင်တန်းများ ထည့်သွင်းပါ။</small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Student Modal -->
+<div class="modal fade" id="addStudentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-user-plus"></i> ကျောင်းသားထည့်သွင်းရန်
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">ကျောင်းသားရွေးချယ်ပါ</label>
+                    <select id="studentSelect" class="form-select">
+                        <option value="">-- ကျောင်းသားရွေးချယ်ပါ --</option>
+                    </select>
+                </div>
+                <div id="studentInfo" class="alert alert-info d-none">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="studentInfoText"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">မသိမ်းတော့ပါ</button>
+                <button type="button" class="btn btn-primary" onclick="addStudent()">
+                    <i class="fas fa-save"></i> ထည့်သွင်းမည်
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Course Modal -->
+<div class="modal fade" id="addCourseModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-book-plus"></i> သင်တန်းထည့်သွင်းရန်
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">သင်တန်းရွေးချယ်ပါ</label>
+                    <select id="courseSelect" class="form-select">
+                        <option value="">-- သင်တန်းရွေးချယ်ပါ --</option>
+                    </select>
+                </div>
+                <div id="courseInfo" class="alert alert-info d-none">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="courseInfoText"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">မသိမ်းတော့ပါ</button>
+                <button type="button" class="btn btn-primary" onclick="addCourse()">
+                    <i class="fas fa-save"></i> ထည့်သွင်းမည်
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Load available students when modal opens
+        $('#addStudentModal').on('show.bs.modal', function() {
+            $.ajax({
+                url: '@Url.Action("GetAvailableStudents", "Class")',
+                type: 'GET',
+                data: { classId: @Model.ClassPkid },
+                success: function(data) {
+                    var select = $('#studentSelect');
+                    select.empty();
+                    select.append('<option value="">-- ကျောင်းသားရွေးချယ်ပါ --</option>');
+
+                    $.each(data, function(i, student) {
+                        select.append('<option value="' + student.StudentPkid + '">' +
+                                     student.StudentId + ' - ' + student.FullName + '</option>');
+                    });
+
+                    $('#studentInfo').addClass('d-none');
+                }
+            });
+        });
+
+        // Load available courses when modal opens
+        $('#addCourseModal').on('show.bs.modal', function() {
+            $.ajax({
+                url: '@Url.Action("GetAvailableCourses", "Class")',
+                type: 'GET',
+                data: { classId: @Model.ClassPkid },
+                success: function(data) {
+                    var select = $('#courseSelect');
+                    select.empty();
+                    select.append('<option value="">-- သင်တန်းရွေးချယ်ပါ --</option>');
+
+                    $.each(data, function(i, course) {
+                        select.append('<option value="' + course.CoursePkid + '">' +
+                                     course.CourseCode + ' - ' + course.CourseName + '</option>');
+                    });
+
+                    $('#courseInfo').addClass('d-none');
+                }
+            });
+        });
+
+        // Show student info on select
+        $('#studentSelect').on('change', function() {
+            var selectedOption = $(this).find('option:selected');
+            if (selectedOption.val()) {
+                $('#studentInfoText').text('ရွေးချယ်ထားသော ကျောင်းသား: ' + selectedOption.text());
+                $('#studentInfo').removeClass('d-none');
+            } else {
+                $('#studentInfo').addClass('d-none');
+            }
+        });
+
+        // Show course info on select
+        $('#courseSelect').on('change', function() {
+            var selectedOption = $(this).find('option:selected');
+            if (selectedOption.val()) {
+                $('#courseInfoText').text('ရွေးချယ်ထားသော သင်တန်း: ' + selectedOption.text());
+                $('#courseInfo').removeClass('d-none');
+            } else {
+                $('#courseInfo').addClass('d-none');
+            }
+        });
+
+        // Add student to class
+        function addStudent() {
+            var studentId = $('#studentSelect').val();
+
+            if (!studentId) {
+                alert('ကျေးဇူးပြု၍ ကျောင်းသားတစ်ဦးကို ရွေးချယ်ပါ။');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("AddStudent", "Class")',
+                type: 'POST',
+                data: {
+                    classId: @Model.ClassPkid,
+                    studentId: studentId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function() {
+                    alert('ကျောင်းသားထည့်သွင်းရာတွင် အမှားအယွင်းရှိပါသည်။');
+                }
+            });
+        }
+
+        // Add course to class
+        function addCourse() {
+            var courseId = $('#courseSelect').val();
+
+            if (!courseId) {
+                alert('ကျေးဇူးပြု၍ သင်တန်းတစ်ခုကို ရွေးချယ်ပါ။');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("AddCourse", "Class")',
+                type: 'POST',
+                data: {
+                    classId: @Model.ClassPkid,
+                    courseId: courseId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function() {
+                    alert('သင်တန်းထည့်သွင်းရာတွင် အမှားအယွင်းရှိပါသည်။');
+                }
+            });
+        }
+
+        // Remove student from class
+        function removeStudent(classId, studentId, studentName) {
+            if (confirm('ကျောင်းသား "' + studentName + '" ကို ဤအတန်းမှ ဖယ်ရှားမှာလား?')) {
+                $.ajax({
+                    url: '@Url.Action("RemoveStudent", "Class")',
+                    type: 'POST',
+                    data: {
+                        classId: classId,
+                        studentId: studentId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('ကျောင်းသားဖယ်ရှားရာတွင် အမှားအယွင်းရှိပါသည်။');
+                    }
+                });
+            }
+        }
+
+        // Remove course from class
+        function removeCourse(classId, courseId, courseName) {
+            if (confirm('သင်တန်း "' + courseName + '" ကို ဤအတန်းမှ ဖယ်ရှားမှာလား?')) {
+                $.ajax({
+                    url: '@Url.Action("RemoveCourse", "Class")',
+                    type: 'POST',
+                    data: {
+                        classId: classId,
+                        courseId: courseId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('သင်တန်းဖယ်ရှားရာတွင် အမှားအယွင်းရှိပါသည်။');
+                    }
+                });
+            }
+        }
+    </script>
+}

@@ -1,0 +1,95 @@
+﻿@model StudentManagementSystem.ViewModels.Teacher_VM
+
+@{
+    ViewData["Title"] = "Teacher Details";
+}
+@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("UserRole");
+
+    if (role == "Teacher")
+    {
+        Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<h2 class="mt-3">Teacher Details</h2>
+
+<div class="card shadow mb-4">
+    <div class="card-header bg-info text-white">
+        <h4 class="mb-0">ဆရာအချက်အလက်များ / Teacher Information</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-bordered">
+                    <tr>
+                        <th style="width: 200px;">Teacher ID</th>
+                        <td>@Model.TeacherPkid</td>
+                    </tr>
+                    <tr>
+                        <th>ဆရာအမည် / Full Name</th>
+                        <td>@Model.FullName</td>
+                    </tr>
+                    <tr>
+                        <th>အီးမေးလ် / Email</th>
+                        <td>@Model.Email</td>
+                    </tr>
+                    <tr>
+                        <th>ဖုန်းနံပါတ် / Phone</th>
+                        <td>@Model.Phone</td>
+                    </tr>
+                    <tr>
+                        <th>အထူးပြုဘာသာရပ် / Specialization</th>
+                        <td>
+                            @if (!string.IsNullOrEmpty(Model.Specialization))
+                            {
+                                <span class="badge bg-primary">@Model.Specialization</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not specified</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>စတင်သည့်ရက် / Hire Date</th>
+                        <td>@Model.HireDate.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="col-md-6">
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> အချက်အလက်များ</h5>
+                    <hr />
+                    <p><strong>ဖန်တီးသည့်ရက်:</strong> @DateTime.Now.ToString("yyyy-MM-dd HH:mm")</p>
+                    <p><strong>နောက်ဆုံးပြင်ဆင်သည့်ရက်:</strong> @DateTime.Now.ToString("yyyy-MM-dd HH:mm")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model.TeacherPkid" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>
+
+<!-- Optional: Show assigned courses if available -->
+<div class="card shadow mb-4">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">သင်ကြားနေသော ဘာသာရပ်များ / Teaching Courses</h5>
+    </div>
+    <div class="card-body">
+        <p class="text-muted">ဘာသာရပ်အချက်အလက်များ ထည့်သွင်းရန် ရှိသေးသည်။</p>
+        <!-- You can add courses list here if you have navigation property -->
+    </div>
+</div>

@@ -11,7 +11,23 @@ public partial class ExamResultTb
 
     public int? StudentPkid { get; set; }
 
+    public int? ClassPkid { get; set; }
+
+    public int? CoursePkid { get; set; }
+
     public int? MarksObtained { get; set; }
 
     public string? Grade { get; set; }
+
+    public string? Remarks { get; set; }
+
+    public bool? IsDeleted { get; set; }
+
+    public int? CreatedBy { get; set; }
+
+    public DateTime? CreatedDate { get; set; }
+
+    public int? ModifiedBy { get; set; }
+
+    public DateTime? ModifiedDate { get; set; }
 }

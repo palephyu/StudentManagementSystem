@@ -13,10 +13,29 @@ namespace StudentManagementSystem.Controllers
             _service = service;
         }
 
+      
         public async Task<IActionResult> Index()
         {
-            var list = await _service.GetAllAsync();
-            return View(list);
+            try
+            {
+                var list = await _service.GetAllAsync();
+                if (list == null)
+                {
+                    // Log လုပ်ပါ
+                    return View(new List<Student_VM>());
+                }
+                return View(list);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                Console.WriteLine($"Error in Index: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+
+                // User ကိုပြမယ်
+                TempData["Error"] = "An error occurred: " + ex.Message;
+                return View(new List<Student_VM>());
+            }
         }
 
         public async Task<IActionResult> Details(int id)

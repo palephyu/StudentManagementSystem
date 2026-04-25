@@ -1,0 +1,528 @@
+﻿@model StudentManagementSystem.ViewModels.Class_VM
+
+@{
+    ViewData["Title"] = "အတန်းအသစ် ထည့်ရန်";
+}
+
+@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("UserRole");
+    
+    if (role == "Teacher")
+    {
+        Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <!-- Breadcrumb Navigation -->
+            <nav aria-label="breadcrumb" class="mt-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Home" asp-action="Index">
+                            <i class="fas fa-home"></i> ပင်မစာမျက်နှာ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">
+                            <i class="fas fa-chalkboard"></i> အတန်းများ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <i class="fas fa-plus-circle"></i> အတန်းအသစ်
+                    </li>
+                </ol>
+            </nav>
+
+            <!-- Main Create Form Card -->
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-plus-circle"></i> အတန်းအသစ် ထည့်ရန်
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" id="createForm">
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" id="validationSummary"></div>
+
+                        <!-- Class Basic Information -->
+                        <div class="card bg-light mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-info-circle"></i> အတန်းအခြေခံအချက်အလက်များ
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Class Name -->
+                                    <div class="col-md-12 mb-3">
+                                        <label asp-for="ClassName" class="form-label fw-bold">
+                                            <i class="fas fa-chalkboard text-primary"></i> 
+                                            @Html.DisplayNameFor(m => m.ClassName) 
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-primary text-white">
+                                                <i class="fas fa-school"></i>
+                                            </span>
+                                            <input asp-for="ClassName" 
+                                                   class="form-control" 
+                                                   placeholder="ဥပမာ - Grade-10, Matriculation, KG" 
+                                                   autofocus />
+                                        </div>
+                                        <span asp-validation-for="ClassName" class="text-danger"></span>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-info-circle"></i> 
+                                            အတန်းအမည် ထည့်သွင်းပါ (ဥပမာ - Grade-10, Grade-11, Matriculation)
+                                        </small>
+                                    </div>
+
+                                    <!-- Section and Year Row -->
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Section" class="form-label fw-bold">
+                                            <i class="fas fa-layer-group text-success"></i> 
+                                            @Html.DisplayNameFor(m => m.Section)
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-success text-white">
+                                                <i class="fas fa-tag"></i>
+                                            </span>
+                                            <input asp-for="Section" 
+                                                   class="form-control" 
+                                                   placeholder="ဥပမာ - A, B, C" 
+                                                   maxlength="10" />
+                                        </div>
+                                        <span asp-validation-for="Section" class="text-danger"></span>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-info-circle"></i> 
+                                            အပိုင်း ထည့်သွင်းပါ (A, B, C, D, E)
+                                        </small>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Year" class="form-label fw-bold">
+                                            <i class="fas fa-calendar-alt text-warning"></i> 
+                                            @Html.DisplayNameFor(m => m.Year)
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-warning text-dark">
+                                                <i class="fas fa-calendar"></i>
+                                            </span>
+                                            <input asp-for="Year" 
+                                                   type="number" 
+                                                   class="form-control" 
+                                                   min="1900" 
+                                                   max="@(DateTime.Now.Year + 10)" />
+                                        </div>
+                                        <span asp-validation-for="Year" class="text-danger"></span>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-info-circle"></i> 
+                                            သင်နှစ် ထည့်သွင်းပါ (1900 မှ @(DateTime.Now.Year + 10) အတွင်း)
+                                        </small>
+                                    </div>
+
+                                    <!-- Class Teacher -->
+                                    <div class="col-md-12 mb-3">
+                                        <label asp-for="TeacherPkid" class="form-label fw-bold">
+                                            <i class="fas fa-user-tie text-info"></i> 
+                                            @Html.DisplayNameFor(m => m.TeacherPkid)
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-info text-white">
+                                                <i class="fas fa-chalkboard-user"></i>
+                                            </span>
+                                            <select asp-for="TeacherPkid" 
+                                                    class="form-select" 
+                                                    asp-items="ViewBag.TeacherList">
+                                                <option value="">-- အတန်းပိုင်ဆရာ ရွေးချယ်ပါ --</option>
+                                            </select>
+                                            <button type="button" 
+                                                    class="btn btn-outline-info" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#teacherInfoModal"
+                                                    title="ဆရာအချက်အလက်များ">
+                                                <i class="fas fa-info-circle"></i>
+                                            </button>
+                                        </div>
+                                        <span asp-validation-for="TeacherPkid" class="text-danger"></span>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-info-circle"></i> 
+                                            အတန်းပိုင်ဆရာ သတ်မှတ်ပါ (မသတ်မှတ်လည်းရပါသည်)
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Preview Card -->
+                        <div class="card bg-dark text-white mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-eye"></i> အချက်အလက်များ အကျဉ်းချုပ်
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-md-4">
+                                        <i class="fas fa-chalkboard fa-2x"></i>
+                                        <p class="mb-0 mt-2">
+                                            <strong>အတန်းအမည်:</strong>
+                                            <span id="previewClassName" class="badge bg-info">-</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <i class="fas fa-layer-group fa-2x"></i>
+                                        <p class="mb-0 mt-2">
+                                            <strong>အပိုင်း:</strong>
+                                            <span id="previewSection" class="badge bg-success">-</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <i class="fas fa-calendar-alt fa-2x"></i>
+                                        <p class="mb-0 mt-2">
+                                            <strong>သင်နှစ်:</strong>
+                                            <span id="previewYear" class="badge bg-warning text-dark">-</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="text-center">
+                                    <i class="fas fa-user-tie fa-2x"></i>
+                                    <p class="mb-0 mt-2">
+                                        <strong>အတန်းပိုင်ဆရာ:</strong>
+                                        <span id="previewTeacher" class="badge bg-secondary">-</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>မှတ်ချက်:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>အတန်းအမည်နှင့် အပိုင်းတူပါက ထပ်နေလျှင် ခွင့်မပြုပါ။</li>
+                                <li>အတန်းတစ်ခုဖန်တီးပြီးနောက် ကျောင်းသားများနှင့် သင်တန်းများကို အသေးစိတ်စာမျက်နှာတွင် ထည့်သွင်းနိုင်ပါသည်။</li>
+                                <li>အတန်းပိုင်ဆရာကို နောက်မှလည်း ပြောင်းလဲနိုင်ပါသည်။</li>
+                            </ul>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
+                                    <i class="fas fa-save"></i> သိမ်းဆည်းမည်
+                                </button>
+                                <button type="reset" class="btn btn-secondary" id="resetBtn">
+                                    <i class="fas fa-undo"></i> ပြန်လည်စတင်မည်
+                                </button>
+                                <a asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i> မသိမ်းတော့ပါ
+                                </a>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#helpModal">
+                                    <i class="fas fa-question-circle"></i> အကူအညီ
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Recent Classes Card -->
+            <div class="card shadow mt-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history"></i> မကြာသေးမီက ဖန်တီးထားသော အတန်းများ
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="recentClasses" class="row">
+                        <div class="col-12 text-center text-muted">
+                            <i class="fas fa-spinner fa-spin"></i> Loading...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Teacher Information Modal -->
+<div class="modal fade" id="teacherInfoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-user-tie"></i> ရွေးချယ်ထားသော ဆရာအချက်အလက်
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="teacherDetails">
+                    <p class="text-muted text-center">
+                        <i class="fas fa-info-circle"></i> 
+                        ကျေးဇူးပြု၍ ဆရာတစ်ဦးကို ရွေးချယ်ပါ။
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ပိတ်ရန်</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Help Modal -->
+<div class="modal fade" id="helpModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-question-circle"></i> လမ်းညွှန်ချက်များ
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6><i class="fas fa-chalkboard"></i> အတန်းအမည်</h6>
+                <p>အတန်း၏အမည်ကို ထည့်သွင်းပါ။ ဥပမာ - Grade-10, Grade-11, Matriculation</p>
+                
+                <h6><i class="fas fa-layer-group"></i> အပိုင်း</h6>
+                <p>အတန်း၏အပိုင်းကို ထည့်သွင်းပါ။ ဥပမာ - A, B, C, D</p>
+                
+                <h6><i class="fas fa-calendar-alt"></i> သင်နှစ်</h6>
+                <p>မည်သည့်သင်နှစ်တွင် ဖွင့်မည်ကို ထည့်သွင်းပါ။</p>
+                
+                <h6><i class="fas fa-user-tie"></i> အတန်းပိုင်ဆရာ</h6>
+                <p>ထိုအတန်း၏ တာဝန်ခံဆရာကို ရွေးချယ်ပါ။</p>
+                
+                <hr />
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>သတိပြုရန်:</strong>
+                    အတန်းအမည်နှင့် အပိုင်းတူပါက ထပ်နေလျှင် သိမ်းဆည်းခွင့်မပြုပါ။
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">နားလည်ပါသည်</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    
+    <script>
+        $(document).ready(function() {
+            // Load recent classes
+            loadRecentClasses();
+            
+            // Live preview
+            $('#ClassName').on('keyup change', function() {
+                var val = $(this).val();
+                $('#previewClassName').text(val || '-');
+                if (val) {
+                    $('#previewClassName').removeClass('bg-secondary').addClass('bg-info');
+                } else {
+                    $('#previewClassName').removeClass('bg-info').addClass('bg-secondary');
+                }
+            });
+            
+            $('#Section').on('keyup change', function() {
+                var val = $(this).val();
+                $('#previewSection').text(val || '-');
+                if (val) {
+                    $('#previewSection').removeClass('bg-secondary').addClass('bg-success');
+                } else {
+                    $('#previewSection').removeClass('bg-success').addClass('bg-secondary');
+                }
+            });
+            
+            $('#Year').on('change', function() {
+                var val = $(this).val();
+                $('#previewYear').text(val || '-');
+                if (val) {
+                    $('#previewYear').removeClass('bg-secondary').addClass('bg-warning text-dark');
+                } else {
+                    $('#previewYear').removeClass('bg-warning').addClass('bg-secondary');
+                }
+            });
+            
+            $('#TeacherPkid').on('change', function() {
+                var teacherId = $(this).val();
+                if (teacherId) {
+                    var teacherName = $(this).find('option:selected').text();
+                    $('#previewTeacher').text(teacherName);
+                    $('#previewTeacher').removeClass('bg-secondary').addClass('bg-info');
+                    
+                    // Load teacher details for modal
+                    loadTeacherDetails(teacherId);
+                } else {
+                    $('#previewTeacher').text('-');
+                    $('#previewTeacher').removeClass('bg-info').addClass('bg-secondary');
+                    $('#teacherDetails').html('<p class="text-muted text-center"><i class="fas fa-info-circle"></i> ကျေးဇူးပြု၍ ဆရာတစ်ဦးကို ရွေးချယ်ပါ။</p>');
+                }
+            });
+            
+            // Reset button functionality
+            $('#resetBtn').on('click', function(e) {
+                e.preventDefault();
+                if (confirm('ထည့်သွင်းထားသော အချက်အလက်များကို ပြန်လည်စတင်မှာလား?')) {
+                    $('#createForm')[0].reset();
+                    $('#previewClassName').text('-').removeClass('bg-info').addClass('bg-secondary');
+                    $('#previewSection').text('-').removeClass('bg-success').addClass('bg-secondary');
+                    $('#previewYear').text('-').removeClass('bg-warning').addClass('bg-secondary');
+                    $('#previewTeacher').text('-').removeClass('bg-info').addClass('bg-secondary');
+                    $('#validationSummary').addClass('d-none').empty();
+                }
+            });
+            
+            // Form validation before submit
+            $('#createForm').on('submit', function(e) {
+                var isValid = true;
+                var errorMessages = [];
+                
+                // Validate Class Name
+                var className = $('#ClassName').val().trim();
+                if (!className) {
+                    errorMessages.push('အတန်းအမည် ထည့်သွင်းရန် လိုအပ်ပါသည်။');
+                    isValid = false;
+                } else if (className.length < 2) {
+                    errorMessages.push('အတန်းအမည်သည် အနည်းဆုံး ၂ လုံးရှိရပါမည်။');
+                    isValid = false;
+                }
+                
+                // Validate Year
+                var year = $('#Year').val();
+                if (year) {
+                    var currentYear = new Date().getFullYear();
+                    if (year < 1900) {
+                        errorMessages.push('သင်နှစ်သည် 1900 ထက်ကြီးရပါမည်။');
+                        isValid = false;
+                    }
+                    if (year > currentYear + 10) {
+                        errorMessages.push('သင်နှစ်သည် လက်ရှိနှစ် +10 ထက်မကြီးရပါ။');
+                        isValid = false;
+                    }
+                }
+                
+                // Validate Section format
+                var section = $('#Section').val();
+                if (section && section.length > 10) {
+                    errorMessages.push('အပိုင်းသည် အလုံး ၁၀ လုံးထက် မပိုရပါ။');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    var errorHtml = '<strong><i class="fas fa-exclamation-triangle"></i> ကျေးဇူးပြု၍ အောက်ပါအချက်များကို စစ်ဆေးပါ:</strong><ul>';
+                    errorMessages.forEach(function(msg) {
+                        errorHtml += '<li>' + msg + '</li>';
+                    });
+                    errorHtml += '</ul>';
+                    $('#validationSummary').removeClass('d-none').html(errorHtml);
+                    
+                    // Scroll to validation summary
+                    $('html, body').animate({
+                        scrollTop: $('#validationSummary').offset().top - 100
+                    }, 500);
+                } else {
+                    // Show loading state
+                    var btn = $('#submitBtn');
+                    btn.html('<i class="fas fa-spinner fa-spin"></i> သိမ်းဆည်းနေပါသည်...');
+                    btn.prop('disabled', true);
+                }
+            });
+            
+            // Function to load recent classes
+            function loadRecentClasses() {
+                $.ajax({
+                    url: '@Url.Action("GetRecentClasses", "Class")',
+                    type: 'GET',
+                    success: function(data) {
+                        var html = '';
+                        if (data && data.length > 0) {
+                            $.each(data, function(i, classItem) {
+                                html += '<div class="col-md-4 mb-2">';
+                                html += '<div class="card border-primary">';
+                                html += '<div class="card-body p-2">';
+                                html += '<small class="text-muted">' + (classItem.year || new Date().getFullYear()) + '</small>';
+                                html += '<h6 class="mb-0">' + classItem.className;
+                                if (classItem.section) html += ' - ' + classItem.section;
+                                html += '</h6>';
+                                html += '</div></div></div>';
+                            });
+                        } else {
+                            html = '<div class="col-12 text-center text-muted">';
+                            html += '<i class="fas fa-info-circle"></i> အတန်းများ မရှိသေးပါ။';
+                            html += '</div>';
+                        }
+                        $('#recentClasses').html(html);
+                    },
+                    error: function() {
+                        $('#recentClasses').html('<div class="col-12 text-center text-muted"><i class="fas fa-exclamation-circle"></i> Load failed.</div>');
+                    }
+                });
+            }
+            
+            // Function to load teacher details
+            function loadTeacherDetails(teacherId) {
+                $.ajax({
+                    url: '@Url.Action("GetTeacherInfo", "Class")',
+                    type: 'GET',
+                    data: { id: teacherId },
+                    success: function(data) {
+                        if (data) {
+                            var html = '<table class="table table-sm">';
+                            html += '<tr><th>ဆရာအမည်:</th><td>' + (data.fullName || '-') + '</td></tr>';
+                            html += '<tr><th>အီးမေးလ်:</th><td>' + (data.email || '-') + '</td></tr>';
+                            html += '<tr><th>ဖုန်း:</th><td>' + (data.phone || '-') + '</td></tr>';
+                            html += '<tr><th>အထူးပြု:</th><td>' + (data.specialization || '-') + '</td></tr>';
+                            html += '</table>';
+                            $('#teacherDetails').html(html);
+                        } else {
+                            $('#teacherDetails').html('<p class="text-muted text-center"><i class="fas fa-info-circle"></i> ဆရာအချက်အလက် မရှိပါ။</p>');
+                        }
+                    },
+                    error: function() {
+                        $('#teacherDetails').html('<p class="text-muted text-center"><i class="fas fa-exclamation-circle"></i> အမှားအယွင်းရှိပါသည်။</p>');
+                    }
+                });
+            }
+            
+            // Prevent double submit
+            $('#createForm').on('submit', function() {
+                if ($(this).data('submitted') === true) {
+                    return false;
+                }
+                $(this).data('submitted', true);
+                return true;
+            });
+        });
+        
+        // Auto-uppercase section
+        document.getElementById('Section')?.addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+        
+        // Set default year if empty
+        document.getElementById('Year')?.addEventListener('blur', function() {
+            if (!this.value) {
+                this.value = new Date().getFullYear();
+                $('#previewYear').text(this.value);
+            }
+        });
+    </script>
+}

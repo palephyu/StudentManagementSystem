@@ -18,6 +18,10 @@ public partial class StudentdbContext : DbContext
 
     public virtual DbSet<AttendanceTb> AttendanceTbs { get; set; }
 
+    public virtual DbSet<ClassCoursesTb> ClassCoursesTbs { get; set; }
+
+    public virtual DbSet<ClassStudentsTb> ClassStudentsTbs { get; set; }
+
     public virtual DbSet<ClassTb> ClassTbs { get; set; }
 
     public virtual DbSet<CourseTb> CourseTbs { get; set; }
@@ -35,9 +39,9 @@ public partial class StudentdbContext : DbContext
     public virtual DbSet<UserTb> UserTbs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-      => optionsBuilder.UseSqlServer("Server=desktop-fevs92l\\sqlexpress; Database=SMSystem; User Id=sms; Password=sms@dmin123;Trust Server Certificate=true");
-   // => optionsBuilder.UseSqlServer("Server=StudentDB.mssql.somee.com;Database=StudentDB;User Id=palephyu_SQLLogin_1;Password=Student@123;TrustServerCertificate=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=desktop-fevs92l\\sqlexpress; Database=SMSystem; User Id=sms; Password=sms@dmin123;Trust Server Certificate=true");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AttendanceTb>(entity =>
@@ -46,7 +50,27 @@ public partial class StudentdbContext : DbContext
 
             entity.ToTable("Attendance_TB");
 
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(20);
+        });
+
+        modelBuilder.Entity<ClassCoursesTb>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("ClassCourses_TB");
+
+            entity.Property(e => e.AssignedDate).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<ClassStudentsTb>(entity =>
+        {
+            entity.HasKey(e => e.ClassStudentPkid);
+
+            entity.ToTable("ClassStudents_TB");
+
+            entity.Property(e => e.EnrollmentDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<ClassTb>(entity =>
@@ -58,6 +82,11 @@ public partial class StudentdbContext : DbContext
             entity.Property(e => e.ClassName)
                 .HasMaxLength(50)
                 .IsFixedLength();
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.Section)
+                .HasMaxLength(50)
+                .IsFixedLength();
         });
 
         modelBuilder.Entity<CourseTb>(entity =>
@@ -67,9 +96,9 @@ public partial class StudentdbContext : DbContext
             entity.ToTable("Course_TB");
 
             entity.Property(e => e.CourseCode).HasMaxLength(50);
-            entity.Property(e => e.CourseName)
-                .HasMaxLength(150)
-                .IsFixedLength();
+            entity.Property(e => e.CourseName).HasMaxLength(150);
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<EnrollmentTb>(entity =>
@@ -77,6 +106,9 @@ public partial class StudentdbContext : DbContext
             entity.HasKey(e => e.EnrollmentPkid);
 
             entity.ToTable("Enrollment_TB");
+
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<ExamResultTb>(entity =>
@@ -85,7 +117,10 @@ public partial class StudentdbContext : DbContext
 
             entity.ToTable("ExamResult_TB");
 
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.Grade).HasMaxLength(5);
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.Remarks).HasMaxLength(50);
         });
 
         modelBuilder.Entity<ExamTb>(entity =>
@@ -94,7 +129,12 @@ public partial class StudentdbContext : DbContext
 
             entity.ToTable("Exam_TB");
 
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.EndTime).HasColumnType("datetime");
             entity.Property(e => e.ExamTitle).HasMaxLength(150);
+            entity.Property(e => e.Location).HasMaxLength(150);
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.StartTime).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<StudentTb>(entity =>
@@ -104,6 +144,7 @@ public partial class StudentdbContext : DbContext
             entity.ToTable("Student_TB");
 
             entity.Property(e => e.Address).HasMaxLength(300);
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.DateOfBirth).HasColumnType("datetime");
             entity.Property(e => e.Email).HasMaxLength(50);
             entity.Property(e => e.FullName).HasMaxLength(50);
@@ -113,6 +154,7 @@ public partial class StudentdbContext : DbContext
             entity.Property(e => e.ImagePath)
                 .HasMaxLength(200)
                 .IsFixedLength();
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Phone)
                 .HasMaxLength(20)
                 .IsFixedLength();
@@ -128,8 +170,10 @@ public partial class StudentdbContext : DbContext
 
             entity.ToTable("Teacher_TB");
 
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.Email).HasMaxLength(150);
             entity.Property(e => e.FullName).HasMaxLength(150);
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Phone)
                 .HasMaxLength(20)
                 .IsFixedLength();
@@ -142,6 +186,9 @@ public partial class StudentdbContext : DbContext
 
             entity.ToTable("User_TB");
 
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.Role).HasMaxLength(50);
             entity.Property(e => e.UserType).HasMaxLength(50);
             entity.Property(e => e.Username).HasMaxLength(50);
         });

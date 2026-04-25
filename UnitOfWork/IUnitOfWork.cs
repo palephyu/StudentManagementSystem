@@ -13,8 +13,11 @@ namespace StudentManagementSystem.UnitOfWork
         IExamRepository ExamRepository { get; }
         IExamResultRepository ExamResultRepository { get; }
         IAttendanceRepository AttendanceRepository { get; }
-     //   IEnrollmentRepository EnrollmentRepository { get; }
-        Task Commit();       
-        void RollBack();
+        //   IEnrollmentRepository EnrollmentRepository { get; }
+
+        // Transaction Methods
+        Task Commit();   // အပြောင်းအလဲတွေကို Database မှာ သိမ်းမယ်     
+        void RollBack(); // အပြောင်းအလဲတွေကို ပယ်ဖျက်မယ်
+        Task BeginTransactionAsync();   // Transaction စမယ်
     }
 }

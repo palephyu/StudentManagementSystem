@@ -41,9 +41,9 @@
         {
             <tr>
                 <td>
-                    @if (s.ImageFile != null)
+                    @if (!string.IsNullOrEmpty(s.ImagePath))
                     {
-                        <img src="@s.ImageFile" alt="Profile Image" width="50" height="50" class="rounded-circle" />
+                        <img src="@s.ImagePath" alt="Profile Image" width="50" height="50" class="rounded-circle" />
                     }
                     else
                     {

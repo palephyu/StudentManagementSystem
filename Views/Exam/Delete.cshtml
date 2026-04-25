@@ -1,0 +1,51 @@
+﻿@model StudentManagementSystem.ViewModels.Exam_VM
+
+@{
+    ViewData["Title"] = "စာမေးပွဲဖျက်ရန်";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card shadow mt-5">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="fas fa-trash"></i> စာမေးပွဲဖျက်ရန်</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>သတိပြုရန်!</strong> ဤစာမေးပွဲကို ဖျက်ပါက ပြန်လည်ရယူနိုင်ပါသေးသည်။
+                    </div>
+
+                    <dl class="row">
+                        <dt class="col-sm-4">စာမေးပွဲခေါင်းစဉ်</dt>
+                        <dd class="col-sm-8">@Model.ExamTitle</dd>
+
+                        <dt class="col-sm-4">သင်တန်း</dt>
+                        <dd class="col-sm-8">@Model.CourseName</dd>
+
+                        <dt class="col-sm-4">အတန်း</dt>
+                        <dd class="col-sm-8">@Model.ClassName</dd>
+
+                        <dt class="col-sm-4">စာမေးပွဲရက်</dt>
+                        <dd class="col-sm-8">@Model.ExamDate</dd>
+
+                        <dt class="col-sm-4">အမှတ်အများဆုံး</dt>
+                        <dd class="col-sm-8">@Model.MaxMarks</dd>
+                    </dl>
+
+                    <form asp-action="Delete" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ExamPkid" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> အတည်ပြုဖျက်မည်
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> မဖျက်တော့ပါ
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

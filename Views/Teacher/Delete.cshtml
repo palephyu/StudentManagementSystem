@@ -1,0 +1,99 @@
+﻿@model StudentManagementSystem.ViewModels.Teacher_VM
+
+@{
+    ViewData["Title"] = "Delete Teacher";
+}
+@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("UserRole");
+
+    if (role == "Teacher")
+    {
+        Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<h2 class="mt-3 text-danger">Delete Teacher</h2>
+
+<div class="alert alert-warning">
+    <i class="fas fa-exclamation-triangle"></i>
+    <strong>သတိပြုရန်!</strong> ဤဆရာ/မကို ဖျက်ပါက ဆက်စပ်နေသော အချက်အလက်များအားလုံး ပျက်စီးသွားနိုင်ပါသည်။
+    <hr />
+    သေချာစွာ စဉ်းစားပြီးမှ ဖျက်ပါ။
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0">ဖျက်တော့မည့် ဆရာအချက်အလက်များ</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-bordered">
+                    <tr>
+                        <th style="width: 200px;">Teacher ID</th>
+                        <td>@Model.TeacherPkid</td>
+                    </tr>
+                    <tr>
+                        <th>ဆရာအမည် / Full Name</th>
+                        <td>@Model.FullName</td>
+                    </tr>
+                    <tr>
+                        <th>အီးမေးလ် / Email</th>
+                        <td>@Model.Email</td>
+                    </tr>
+                    <tr>
+                        <th>ဖုန်းနံပါတ် / Phone</th>
+                        <td>@Model.Phone</td>
+                    </tr>
+                    <tr>
+                        <th>အထူးပြုဘာသာရပ် / Specialization</th>
+                        <td>@Model.Specialization</td>
+                    </tr>
+                    <tr>
+                        <th>စတင်သည့်ရက် / Hire Date</th>
+                        <td>@Model.HireDate.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <div class="alert alert-danger">
+                    <h5><i class="fas fa-trash"></i> ဖျက်မည့်အကြောင်း</h5>
+                    <hr />
+                    <p>အောက်ပါအချက်အလက်များ ဆုံးရှုံးနိုင်ပါသည်:</p>
+                    <ul>
+                        <li>ဆရာ၏ ကိုယ်ရေးအချက်အလက်များ</li>
+                        <li>ဆက်စပ်သင်တန်းများ (ရှိပါက)</li>
+                        <li>သင်ကြားမှုမှတ်တမ်းများ</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="TeacherPkid" />
+            <button type="submit" class="btn btn-danger" onclick="return confirm('ဤဆရာ/မကို အမှန်တကယ် ဖျက်မှာလား?');">
+                <i class="fas fa-trash"></i> Yes, Delete
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Double confirmation for delete
+        document.querySelector('form').addEventListener('submit', function(e) {
+            if (!confirm('ကျေးဇူးပြု၍ ထပ်မံအတည်ပြုပါ။ ဤဆရာ/မကို ဖျက်ပါက ပြန်လည် ရယူ၍ မရနိုင်တော့ပါ။ ဆက်လက်ဖျက်မှာလား?')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+}

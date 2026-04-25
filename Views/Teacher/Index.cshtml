@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<StudentManagementSystem.ViewModels.Teacher_VM>
+
 @{
-    ViewData["Title"] = "Teachers";
+    ViewData["Title"] = "Teacher List";
 }
 @using Microsoft.AspNetCore.Http
 @{
@@ -15,26 +16,38 @@
         Layout = "~/Views/Shared/_Layout.cshtml"; // Admin or others
     }
 }
-<h2>Teachers</h2>
 
-<p><a asp-action="Create" class="btn btn-primary">Create New Teacher</a></p>
+<h2 class="mt-3">Teacher List</h2>
 
-<table class="table table-striped">
-    <thead>
+<a asp-action="Create" class="btn btn-primary mb-3">+ Add New Teacher</a>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
         <tr>
-            <th>#</th>
-            <th>Full Name</th>
+            <th>Profile</th>
+            <th>Teacher ID</th>
+            <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
             <th>Specialization</th>
             <th>Hire Date</th>
-            <th></th>
+            <th width="200">Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var t in Model)
         {
             <tr>
+                <td>
+                    @* @if (!string.IsNullOrEmpty(t.ImagePath))
+                    {
+                        <img src="@t.ImagePath" alt="Profile Image" width="50" height="50" class="rounded-circle" />
+                    } *@
+                    @* else
+                    { *@
+                        <span>No Image</span>
+                    @* } *@
+                </td>
                 <td>@t.TeacherPkid</td>
                 <td>@t.FullName</td>
                 <td>@t.Email</td>
@@ -42,9 +55,9 @@
                 <td>@t.Specialization</td>
                 <td>@t.HireDate.ToString("yyyy-MM-dd")</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@t.TeacherPkid">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@t.TeacherPkid">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@t.TeacherPkid">Delete</a>
+                    <a asp-action="Details" asp-route-id="@t.TeacherPkid" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="Edit" asp-route-id="@t.TeacherPkid" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@t.TeacherPkid" class="btn btn-danger btn-sm">Delete</a>
                 </td>
             </tr>
         }

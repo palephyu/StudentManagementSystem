@@ -14,4 +14,16 @@ public partial class ClassTb
     public int? Year { get; set; }
 
     public int? TeacherPkid { get; set; }
+
+    public string? Section { get; set; }
+
+    public bool? IsDeleted { get; set; }
+
+    public int? CreatedBy { get; set; }
+
+    public DateTime? CreatedDate { get; set; }
+
+    public int? ModifiedBy { get; set; }
+
+    public DateTime? ModifiedDate { get; set; }
 }

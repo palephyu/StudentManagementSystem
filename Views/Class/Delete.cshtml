@@ -1,0 +1,262 @@
+﻿@model StudentManagementSystem.ViewModels.Class_VM
+
+@{
+    ViewData["Title"] = "အတန်းဖျက်ရန်";
+}
+
+@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("UserRole");
+
+    if (role == "Teacher")
+    {
+        Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <!-- Warning Alert -->
+            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                <h4 class="alert-heading">
+                    <i class="fas fa-exclamation-triangle"></i> သတိပြုရန်!
+                </h4>
+                <p>ဤအတန်းကို ဖျက်ပါက အောက်ပါအချက်အလက်များ ဆုံးရှုံးနိုင်ပါသည်။</p>
+                <hr>
+                <p class="mb-0">
+                    <i class="fas fa-check-circle text-danger"></i> ကျေးဇူးပြု၍ သေချာစွာ စဉ်းစားပြီးမှ ဖျက်ပါ။<br>
+                    <i class="fas fa-info-circle text-info"></i> ဖျက်ပါက ဤအတန်းကို ပြန်လည် အသက်သွင်းနိုင်ပါသေးသည်။
+                </p>
+            </div>
+
+            <!-- Delete Confirmation Card -->
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-trash-alt"></i> အတန်းဖျက်ရန် အတည်ပြုချက်
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-question-circle"></i>
+                        <strong>သင်သည် အောက်ပါအတန်းကို ဖျက်တော့မည် ဖြစ်ပါသလား?</strong>
+                    </div>
+
+                    <!-- Class Information -->
+                    <div class="card bg-light mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-info-circle"></i> ဖျက်တော့မည့် အတန်းအချက်အလက်များ
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <th style="width: 40%;">အတန်း ID:</th>
+                                            <td>
+                                                <span class="badge bg-secondary">@Model.ClassPkid</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>အတန်းအမည်:</th>
+                                            <td>
+                                                <strong class="text-danger">@Model.ClassName</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>အပိုင်း:</th>
+                                            <td>
+                                                <span class="badge bg-info">@(Model.Section ?? "N/A")</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>သင်နှစ်:</th>
+                                            <td>@(Model.Year ?? DateTime.Now.Year)</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <th style="width: 40%;">အတန်းပိုင်ဆရာ:</th>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(Model.TeacherName))
+                                                {
+                                                    <i class="fas fa-user-check"></i> 
+                                                    @Model.TeacherName
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">သတ်မှတ်မထားပါ</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>ကျောင်းသားဦးရေ:</th>
+                                            <td>
+                                                <span class="badge bg-primary">@Model.TotalStudents ဦး</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>သင်တန်းအရေအတွက်:</th>
+                                            <td>
+                                                <span class="badge bg-success">@Model.TotalCourses ခု</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Impact Warning -->
+                    @if (Model.TotalStudents > 0 || Model.TotalCourses > 0)
+                    {
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <strong>သတိပေးချက်!</strong>
+                            <ul class="mb-0 mt-2">
+                                @if (Model.TotalStudents > 0)
+                                {
+                                    <li>
+                                        <i class="fas fa-users"></i>
+                                        ဤအတန်းတွင် ကျောင်းသား <strong>@Model.TotalStudents ဦး</strong> ရှိနေပါသည်။
+                                        ၎င်းတို့အားလုံး၏ အတန်းသတ်မှတ်ချက်များ ပျက်စီးသွားမည်။
+                                    </li>
+                                }
+                                @if (Model.TotalCourses > 0)
+                                {
+                                    <li>
+                                        <i class="fas fa-book"></i>
+                                        ဤအတန်းတွင် သင်တန်း <strong>@Model.TotalCourses ခု</strong> ရှိနေပါသည်။
+                                        ၎င်းတို့အားလုံး၏ ချိတ်ဆက်မှုများ ပျက်စီးသွားမည်။
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <!-- Audit Information -->
+                    <div class="alert alert-info">
+                        <i class="fas fa-history"></i>
+                        <strong>ဖန်တီးအချက်အလက်:</strong>
+                        <hr class="my-2" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <i class="fas fa-user-plus"></i> ဖန်တီးသူ:
+                                <span class="badge bg-secondary">@(Model.CreatedBy ?? "Unknown")</span>
+                            </div>
+                            <div class="col-md-6">
+                                <i class="fas fa-calendar-plus"></i> ဖန်တီးသည့်ရက်:
+                                <span class="badge bg-secondary">@(Model.CreatedDate?.ToString("yyyy-MM-dd HH:mm") ?? "N/A")</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confirmation Checkbox -->
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="confirmDelete">
+                        <label class="form-check-label fw-bold text-danger" for="confirmDelete">
+                            <i class="fas fa-check-circle"></i>
+                            ဤအတန်းကို ဖျက်ရန် ကျွန်ုပ် အတည်ပြုပါသည်။
+                        </label>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <form asp-action="Delete" method="post" id="deleteForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ClassPkid" />
+
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <button type="submit" class="btn btn-danger" id="confirmDeleteBtn" disabled>
+                                    <i class="fas fa-trash"></i> ဟုတ်ကဲ့၊ ဖျက်မည်
+                                </button>
+                                <a asp-action="Edit" asp-route-id="@Model.ClassPkid" class="btn btn-warning">
+                                    <i class="fas fa-edit"></i> ပြန်ပြင်ဆင်ရန်
+                                </a>
+                            </div>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> မဖျက်တော့ပါ
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Alternative Actions Card -->
+            <div class="card shadow mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-lightbulb"></i> အခြားရွေးချယ်စရာများ
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-6 mb-2">
+                            <a asp-action="Edit" asp-route-id="@Model.ClassPkid" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-edit"></i> အတန်းအချက်အလက် ပြင်ဆင်ရန်
+                            </a>
+                            <small class="text-muted">ဖျက်မည့်အစား အချက်အလက်များ ပြင်ဆင်ပါ</small>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <button type="button" class="btn btn-outline-danger w-100" disabled>
+                                <i class="fas fa-archive"></i> အတန်းကို Archive ပြုလုပ်ရန်
+                            </button>
+                            <small class="text-muted">(နောင်တွင် ထည့်သွင်းမည်)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Enable delete button only when checkbox is checked
+            $('#confirmDelete').on('change', function() {
+                if ($(this).is(':checked')) {
+                    $('#confirmDeleteBtn').prop('disabled', false);
+                } else {
+                    $('#confirmDeleteBtn').prop('disabled', true);
+                }
+            });
+
+            // Confirm before delete
+            $('#deleteForm').on('submit', function(e) {
+                if (!$('#confirmDelete').is(':checked')) {
+                    e.preventDefault();
+                    alert('ကျေးဇူးပြု၍ ဖျက်ရန် အတည်ပြုချက် checkbox ကို အမှန်ခြစ်ပါ။');
+                    return false;
+                }
+
+                if (!confirm('ဤအတန်းကို အပြီးအပိုင် ဖျက်မှာလား?\n\nသတိပြုရန်: ဖျက်ပါက ပြန်လည် အသက်သွင်းနိုင်သော်လည်း ဆက်စပ်အချက်အလက်များ ပျက်စီးနိုင်ပါသည်။')) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Show loading indicator
+                var btn = $('#confirmDeleteBtn');
+                btn.html('<i class="fas fa-spinner fa-spin"></i> ဖျက်နေပါသည်...');
+                btn.prop('disabled', true);
+            });
+        });
+
+        // Prevent accidental page refresh
+        window.addEventListener('beforeunload', function(e) {
+            if ($('#confirmDelete').is(':checked')) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+}

@@ -1,45 +1,170 @@
-﻿@model IEnumerable<StudentManagementSystem.Models.ClassTb>
+﻿@model IEnumerable<StudentManagementSystem.ViewModels.Class_VM>
 
 @{
-    ViewData["Title"] = "Class List";
+    ViewData["Title"] = "အတန်းများစာရင်း";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between mb-3">
-        <h3>Class List</h3>
-        <a asp-action="Create" class="btn btn-primary">+ Add Class</a>
+@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("UserRole");
+    
+    if (role == "Teacher")
+    {
+        Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+        <h2>
+            <i class="fas fa-chalkboard"></i> အတန်းများစာရင်း
+        </h2>
+        <div>
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> အတန်းအသစ် ထည့်ရန်
+            </a>
+            <a asp-action="Deleted" class="btn btn-secondary">
+                <i class="fas fa-trash-restore"></i> ဖျက်ထားသောအတန်းများ
+            </a>
+        </div>
     </div>
 
-    <table class="table table-bordered table-hover">
-        <thead class="table-dark text-center">
-            <tr>
-                <th>#</th>
-                <th>Class Name</th>
-                <th>Year</th>
-                <th>Student ID</th>
-                <th>Teacher ID</th>
-                <th style="width:180px;">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                int i = 1;
-            }
-            @foreach (var item in Model)
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Search Form -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">
+                <i class="fas fa-search"></i> ရှာဖွေရန်
+            </h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="Search" method="get">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <label>အတန်းအမည်</label>
+                        <input type="text" name="ClassName" class="form-control" placeholder="အတန်းအမည် ရိုက်ထည့်ပါ" />
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label>သင်နှစ်</label>
+                        <input type="number" name="Year" class="form-control" placeholder="သင်နှစ်" />
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label>အပိုင်း</label>
+                        <input type="text" name="Section" class="form-control" placeholder="အပိုင်း (A, B, C)" />
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="btn btn-primary form-control">
+                            <i class="fas fa-search"></i> ရှာမည်
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Classes Table -->
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover" id="classTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>စဉ်</th>
+                            <th>အတန်းအမည်</th>
+                            <th>အပိုင်း</th>
+                            <th>သင်နှစ်</th>
+                            <th>အတန်းပိုင်ဆရာ</th>
+                            <th>ကျောင်းသားဦးရေ</th>
+                            <th>ဘာသာရပ်များ</th>
+                            <th>ဖန်တီးသည့်ရက်</th>
+                            <th>ဆောင်ရွက်ချက်များ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int index = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@index++</td>
+                                <td>@item.ClassName</td>
+                                <td>@(item.Section ?? "-")</td>
+                                <td>@(item.Year ?? DateTime.Now.Year)</td>
+                                <td>@(item.TeacherName ?? "သတ်မှတ်မထားပါ")</td>
+                                <td>
+                                    <span class="badge bg-info">@item.TotalStudents ဦး</span>
+                                 </td>
+                                <td>
+                                    <span class="badge bg-success">@item.TotalCourses ခု</span>
+                                 </td>
+                                <td>@(item.CreatedDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@item.ClassPkid" class="btn btn-info btn-sm" title="အသေးစိတ်">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.ClassPkid" class="btn btn-warning btn-sm" title="ပြင်ဆင်ရန်">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.ClassPkid" class="btn btn-danger btn-sm" title="ဖျက်ရန်">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                 </td>
+                             </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (!Model.Any())
             {
-                <tr>
-                    <td class="text-center">@i</td>
-                    <td>@item.ClassName</td>
-                    <td class="text-center">@item.Year</td>
-                    <td class="text-center">@item.StudentPkid</td>
-                    <td class="text-center">@item.TeacherPkid</td>
-                    <td class="text-center">
-                        <a asp-action="Edit" asp-route-id="@item.Classpkid" class="btn btn-sm btn-warning">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@item.Classpkid" class="btn btn-sm btn-danger">Delete</a>
-                    </td>
-                </tr>
-                i++;
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle"></i> အတန်းများ မရှိသေးပါ။ အတန်းအသစ် ထည့်ရန် အပေါ်ရှိ ခလုတ်ကို နှိပ်ပါ။
+                </div>
             }
-        </tbody>
-    </table>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#classTable').DataTable({
+                "language": {
+                    "search": "ရှာမည်:",
+                    "lengthMenu": "စာမျက်နှာအလိုက် _MENU_ ခုပြမည်",
+                    "info": "စုစုပေါင်း _TOTAL_ ခုအနက် _START_ မှ _END_ အထိပြသည်",
+                    "paginate": {
+                        "first": "ပထမ",
+                        "last": "နောက်ဆုံး",
+                        "next": "နောက်",
+                        "previous": "ရှေ့"
+                    }
+                }
+            });
+        });
+    </script>
+}

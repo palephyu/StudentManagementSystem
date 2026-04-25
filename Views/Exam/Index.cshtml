@@ -1,5 +1,60 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<StudentManagementSystem.ViewModels.Exam_VM>
+
 @{
+    ViewData["Title"] = "Exam List";
 }
+
+@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("UserRole");
+
+    if (role == "Teacher")
+    {
+        Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml"; // Admin or others
+    }
+}
+
+<h2 class="mt-3">Exam List</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">+ Add New Exam</a>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Exam Title</th>
+            <th>Course</th>
+            <th>Class</th>
+            <th>Exam Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Max Marks</th>
+            <th>Location</th>
+            <th width="200">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model)
+        {
+            <tr>
+                <td>@e.ExamTitle</td>
+                <td>@e.CoursePkid</td> <!-- later you can replace with CourseName -->
+                <td>@e.ClassPkid</td>  <!-- later replace with ClassName -->
+                <td>@e.ExamDate?.ToString("yyyy-MM-dd")</td>
+                <td>@e.StartTime?.ToString("hh:mm tt")</td>
+                <td>@e.EndTime?.ToString("hh:mm tt")</td>
+                <td>@e.MaxMarks</td>
+                <td>@e.Location</td>
+
+                <td>
+                    <a asp-action="Details" asp-route-id="@e.ExamPkid" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="Edit" asp-route-id="@e.ExamPkid" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@e.ExamPkid" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

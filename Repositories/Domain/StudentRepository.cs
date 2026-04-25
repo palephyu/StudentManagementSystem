@@ -27,27 +27,25 @@ namespace StudentManagementSystem.Repositories.Domain
         public async Task<Student_VM> GetStudentWithClassAsync(int id)
         {
             var getstudent = from s in _context.StudentTbs
-                    join c in _context.ClassTbs on s.StudentPkid equals c.StudentPkid into cg
-                    from c in cg.DefaultIfEmpty()
-                    where s.StudentPkid == id
-                    select new Student_VM
-                    {
-                        StudentPkid = s.StudentPkid,
-                        StudentId = s.StudentId,
-                        FullName = s.FullName,
-                        DateOfBirth = s.DateOfBirth,
-                        Email = s.Email,
-                        Address = s.Address,
-                        Phone = s.Phone,
-                        Gender = s.Gender,
-                        ImagePath = s.ImagePath,
-                        //EnrollmentDate = DateOnly.FromDateTime(DateTime.Now),
-                        Classpkid = id,
-                        ClassName = c != null ? c.ClassName : null
-                    };
+                             where s.StudentPkid == id
+                             select new Student_VM
+                             {
+                                 StudentPkid = s.StudentPkid,
+                                 StudentId = s.StudentId,
+                                 FullName = s.FullName,
+                                 DateOfBirth = s.DateOfBirth,
+                                 Email = s.Email,
+                                 Address = s.Address,
+                                 Phone = s.Phone,
+                                 Gender = s.Gender,
+                                 ImagePath = s.ImagePath,
+                                // EnrollmentDate = s.EnrollmentDate,
+                                 // Class data လိုချင်ရင် တခြား query နဲ့ယူ
+                             };
 
             return await getstudent.FirstOrDefaultAsync();
         }
+        
 
 
         public Task<bool> IsAlreadyExist(string studentId, string fullName)

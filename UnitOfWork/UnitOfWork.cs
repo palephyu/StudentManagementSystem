@@ -9,6 +9,8 @@ namespace StudentManagementSystem.UnitOfWork
     {
         private readonly StudentdbContext _context;
 
+
+        // Repository Field တွေ
         public IStudentRepository _studentRepository;
         public IClassRepository _classRepository;
         public ICourseRepository _courseRepository;
@@ -54,7 +56,8 @@ namespace StudentManagementSystem.UnitOfWork
 
         public IAttendanceRepository AttendanceRepository =>_attendanceRepository ??= new AttendanceRepository(_context);
 
-       //public IEnrollmentRepository EnrollmentRepository => _enrollmentRepository ??= new EnrollmentRepository(_context);
+       
+        //public IEnrollmentRepository EnrollmentRepository => _enrollmentRepository ??= new EnrollmentRepository(_context);
 
 
         public async Task Commit()
@@ -77,6 +80,12 @@ namespace StudentManagementSystem.UnitOfWork
                         break;
                 }
             }
+        }
+
+        public Task BeginTransactionAsync()
+        {
+            return _context.Database.BeginTransactionAsync();
+
         }
     }
 

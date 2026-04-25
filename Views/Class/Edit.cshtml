@@ -1,0 +1,228 @@
+﻿@model StudentManagementSystem.ViewModels.Class_VM
+
+@{
+    ViewData["Title"] = "အတန်း ပြင်ဆင်ရန်";
+}
+
+@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("UserRole");
+
+    if (role == "Teacher")
+    {
+        Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow mt-4">
+                <div class="card-header bg-warning text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-edit"></i> အတန်း ပြင်ဆင်ရန်
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post" id="editForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ClassPkid" />
+                        <input type="hidden" asp-for="CreatedBy" />
+                        <input type="hidden" asp-for="CreatedDate" />
+                        <input type="hidden" asp-for="IsDeleted" />
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ClassName" class="form-label fw-bold">
+                                    <i class="fas fa-chalkboard"></i> @Html.DisplayNameFor(m => m.ClassName)
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-school"></i></span>
+                                    <input asp-for="ClassName" class="form-control" placeholder="ဥပမာ - Grade-10, Matriculation" />
+                                </div>
+                                <span asp-validation-for="ClassName" class="text-danger"></span>
+                                <small class="form-text text-muted">အတန်းအမည် ထည့်သွင်းပါ</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Section" class="form-label fw-bold">
+                                    <i class="fas fa-layer-group"></i> @Html.DisplayNameFor(m => m.Section)
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                                    <input asp-for="Section" class="form-control" placeholder="ဥပမာ - A, B, C" />
+                                </div>
+                                <span asp-validation-for="Section" class="text-danger"></span>
+                                <small class="form-text text-muted">အပိုင်း ထည့်သွင်းပါ (A, B, C, D, E)</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Year" class="form-label fw-bold">
+                                    <i class="fas fa-calendar-alt"></i> @Html.DisplayNameFor(m => m.Year)
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                                    <input asp-for="Year" type="number" class="form-control" min="1900" max="@(DateTime.Now.Year + 10)" />
+                                </div>
+                                <span asp-validation-for="Year" class="text-danger"></span>
+                                <small class="form-text text-muted">သင်နှစ် ထည့်သွင်းပါ</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TeacherPkid" class="form-label fw-bold">
+                                    <i class="fas fa-user-tie"></i> @Html.DisplayNameFor(m => m.TeacherPkid)
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-chalkboard-user"></i></span>
+                                    <select asp-for="TeacherPkid" class="form-select" asp-items="ViewBag.TeacherList">
+                                        <option value="">-- အတန်းပိုင်ဆရာ ရွေးချယ်ပါ --</option>
+                                    </select>
+                                </div>
+                                <span asp-validation-for="TeacherPkid" class="text-danger"></span>
+                                <small class="form-text text-muted">အတန်းပိုင်ဆရာ သတ်မှတ်ပါ</small>
+                            </div>
+                        </div>
+
+                        <!-- Audit Information -->
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>စနစ်အချက်အလက်များ:</strong>
+                            <hr class="my-2" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <i class="fas fa-user-plus"></i> <strong>ဖန်တီးသူ:</strong>
+                                    <span class="badge bg-secondary">@(Model.CreatedBy ?? "Unknown")</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <i class="fas fa-calendar-plus"></i> <strong>ဖန်တီးသည့်ရက်:</strong>
+                                    <span class="badge bg-secondary">@(Model.CreatedDate?.ToString("yyyy-MM-dd HH:mm") ?? "N/A")</span>
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.ModifiedBy))
+                            {
+                                <div class="row mt-2">
+                                    <div class="col-md-6">
+                                        <i class="fas fa-user-edit"></i> <strong>ပြင်ဆင်သူ:</strong>
+                                        <span class="badge bg-warning">@Model.ModifiedBy</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <i class="fas fa-calendar-edit"></i> <strong>ပြင်ဆင်သည့်ရက်:</strong>
+                                        <span class="badge bg-warning">@(Model.ModifiedDate?.ToString("yyyy-MM-dd HH:mm") ?? "N/A")</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="mt-4 d-flex justify-content-between">
+                            <div>
+                                <button type="submit" class="btn btn-primary" id="saveBtn">
+                                    <i class="fas fa-save"></i> သိမ်းဆည်းမည်
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> စာရင်းသို့ပြန်သွားရန်
+                                </a>
+                            </div>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@Model.ClassPkid" class="btn btn-info">
+                                    <i class="fas fa-info-circle"></i> အသေးစိတ်ကြည့်ရန်
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@Model.ClassPkid" class="btn btn-danger" id="deleteBtn">
+                                    <i class="fas fa-trash"></i> ဖျက်ရန်
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Related Information Card -->
+            <div class="card shadow mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line"></i> ဆက်စပ်အချက်အလက်များ
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h3 class="text-primary">
+                                        <i class="fas fa-users"></i> @Model.TotalStudents
+                                    </h3>
+                                    <p class="mb-0">စုစုပေါင်းကျောင်းသား</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h3 class="text-success">
+                                        <i class="fas fa-book"></i> @Model.TotalCourses
+                                    </h3>
+                                    <p class="mb-0">စုစုပေါင်းသင်တန်း</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function() {
+            // Confirm before save if changes made
+            let formChanged = false;
+
+            $('form input, form select').on('change', function() {
+                formChanged = true;
+            });
+
+            $('#saveBtn').on('click', function(e) {
+                if (formChanged) {
+                    if (!confirm('အချက်အလက်များ ပြောင်းလဲမှုရှိပါသည်။ သိမ်းဆည်းမှာလား?')) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+            });
+
+            $('#deleteBtn').on('click', function(e) {
+                if (!confirm('ဤအတန်းကို ဖျက်မှာလား? ကျေးဇူးပြု၍ သေချာစဉ်းစားပါ။')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Validate year
+            $('input[name="Year"]').on('change', function() {
+                var year = parseInt($(this).val());
+                var currentYear = new Date().getFullYear();
+
+                if (year < 1900) {
+                    alert('သင်နှစ်သည် 1900 ထက်ကြီးရပါမည်။');
+                    $(this).val(currentYear);
+                }
+
+                if (year > currentYear + 10) {
+                    alert('သင်နှစ်သည် လက်ရှိနှစ် +10 ထက်မကြီးရပါ။');
+                    $(this).val(currentYear);
+                }
+            });
+        });
+    </script>
+}

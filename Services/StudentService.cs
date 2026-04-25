@@ -16,21 +16,35 @@ namespace StudentManagementSystem.Services
         // ---------------------- Get All -----------------------
         public async Task<IEnumerable<Student_VM>> GetAllAsync()
         {
-            var students = await _unitofwork.StudentRepository.GetAllAsync();
-
-            return students.Select(s => new Student_VM
+            try
             {
-                StudentPkid = s.StudentPkid,
-                StudentId = s.StudentId,
-                FullName = s.FullName,
-                DateOfBirth = s.DateOfBirth,
-                Email = s.Email,
-                Address = s.Address,
-                Phone = s.Phone,
-                Gender = s.Gender,
-                ImagePath = s.ImagePath,
-              // EnrollmentDate = DateOnly.FromDateTime(DateTime.Now), // Fixed: use 'DateOnly' (capital D)
-            }).ToList();
+                var students = await _unitofwork.StudentRepository.GetAllAsync();
+
+                if (students == null || !students.Any())
+                {
+                    return new List<Student_VM>();
+                }
+
+                return students.Select(s => new Student_VM
+                {
+                    StudentPkid = s.StudentPkid,
+                    StudentId = s.StudentId,
+                    FullName = s.FullName,
+                    DateOfBirth = s.DateOfBirth,
+                    Email = s.Email,
+                    Address = s.Address,
+                    Phone = s.Phone,
+                    Gender = s.Gender,
+                    ImagePath = s.ImagePath,
+                   // EnrollmentDate = s.EnrollmentDate
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                // Log လုပ်ပါ
+                Console.WriteLine($"Error in GetAllAsync: {ex.Message}");
+                throw; // ဒါမှ controller က error ကိုသိမယ်
+            }
         }
 
         // ---------------------- Get By ID -----------------------
