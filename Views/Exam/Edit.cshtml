@@ -1,5 +1,675 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model StudentManagementSystem.ViewModels.Exam_VM
+
 @{
+    ViewData["Title"] = "စာမေးပွဲပြင်ဆင်ရန်";
+}
+
+@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("UserRole");
+
+    if (role == "Teacher")
+    {
+        Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <!-- Breadcrumb Navigation -->
+            <nav aria-label="breadcrumb" class="mt-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Home" asp-action="Index">
+                            <i class="fas fa-home"></i> ပင်မစာမျက်နှာ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">
+                            <i class="fas fa-file-alt"></i> စာမေးပွဲများ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <i class="fas fa-edit"></i> စာမေးပွဲပြင်ဆင်ရန်
+                    </li>
+                </ol>
+            </nav>
+
+            <!-- Main Edit Form Card -->
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">
+                        <i class="fas fa-edit"></i> စာမေးပွဲပြင်ဆင်ရန်
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post" id="editForm">
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" id="validationSummary"></div>
+
+                        <input type="hidden" asp-for="ExamPkid" />
+
+                        <!-- Exam Basic Information -->
+                        <div class="card bg-light mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-info-circle"></i> စာမေးပွဲအခြေခံအချက်အလက်များ
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Exam Title -->
+                                    <div class="col-md-12 mb-3">
+                                        <label asp-for="ExamTitle" class="form-label fw-bold">
+                                            <i class="fas fa-heading text-primary"></i>
+                                            @Html.DisplayNameFor(m => m.ExamTitle)
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-primary text-white">
+                                                <i class="fas fa-file-signature"></i>
+                                            </span>
+                                            <input asp-for="ExamTitle"
+                                                   class="form-control"
+                                                   placeholder="ဥပမာ - အလယ်တန်းစာမေးပွဲ၊ နှစ်ကုန်စာမေးပွဲ"
+                                                   autofocus />
+                                        </div>
+                                        <span asp-validation-for="ExamTitle" class="text-danger"></span>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-info-circle"></i>
+                                            စာမေးပွဲခေါင်းစဉ် အပြည့်အစုံ ထည့်သွင်းပါ
+                                        </small>
+                                    </div>
+
+                                    <!-- Course and Class Row -->
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="CoursePkid" class="form-label fw-bold">
+                                            <i class="fas fa-book text-success"></i>
+                                            @Html.DisplayNameFor(m => m.CoursePkid)
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-success text-white">
+                                                <i class="fas fa-graduation-cap"></i>
+                                            </span>
+                                            <select asp-for="CoursePkid"
+                                                    class="form-select"
+                                                    asp-items="ViewBag.CourseList">
+                                                <option value="">-- သင်တန်းရွေးချယ်ပါ --</option>
+                                            </select>
+                                            <button type="button"
+                                                    class="btn btn-outline-success"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#courseInfoModal"
+                                                    title="သင်တန်းအချက်အလက်များ">
+                                                <i class="fas fa-info-circle"></i>
+                                            </button>
+                                        </div>
+                                        <span asp-validation-for="CoursePkid" class="text-danger"></span>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-info-circle"></i>
+                                            မည်သည့်သင်တန်းအတွက် စာမေးပွဲဖြစ်သည်ကို ရွေးချယ်ပါ
+                                        </small>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="ClassPkid" class="form-label fw-bold">
+                                            <i class="fas fa-chalkboard text-info"></i>
+                                            @Html.DisplayNameFor(m => m.ClassPkid)
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-info text-white">
+                                                <i class="fas fa-users"></i>
+                                            </span>
+                                            <select asp-for="ClassPkid"
+                                                    class="form-select"
+                                                    asp-items="ViewBag.ClassList">
+                                                <option value="">-- အတန်းရွေးချယ်ပါ --</option>
+                                            </select>
+                                            <button type="button"
+                                                    class="btn btn-outline-info"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#classInfoModal"
+                                                    title="အတန်းအချက်အလက်များ">
+                                                <i class="fas fa-info-circle"></i>
+                                            </button>
+                                        </div>
+                                        <span asp-validation-for="ClassPkid" class="text-danger"></span>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-info-circle"></i>
+                                            မည်သည့်အတန်းအတွက် စာမေးပွဲဖြစ်သည်ကို ရွေးချယ်ပါ
+                                        </small>
+                                    </div>
+
+                                    <!-- Exam Date and Max Marks -->
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="ExamDate" class="form-label fw-bold">
+                                            <i class="fas fa-calendar-alt text-danger"></i>
+                                            @Html.DisplayNameFor(m => m.ExamDate)
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-danger text-white">
+                                                <i class="fas fa-calendar-day"></i>
+                                            </span>
+                                            <input asp-for="ExamDate"
+                                                   type="date"
+                                                   class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="ExamDate" class="text-danger"></span>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-info-circle"></i>
+                                            စာမေးပွဲကျင်းပမည့်ရက်စွဲကို ရွေးချယ်ပါ
+                                        </small>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="MaxMarks" class="form-label fw-bold">
+                                            <i class="fas fa-star text-warning"></i>
+                                            @Html.DisplayNameFor(m => m.MaxMarks)
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-warning text-dark">
+                                                <i class="fas fa-trophy"></i>
+                                            </span>
+                                            <input asp-for="MaxMarks"
+                                                   type="number"
+                                                   class="form-control"
+                                                   min="1"
+                                                   max="1000" />
+                                        </div>
+                                        <span asp-validation-for="MaxMarks" class="text-danger"></span>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-info-circle"></i>
+                                            စာမေးပွဲ၏ အမှတ်အများဆုံး (၁ မှ ၁၀၀၀ အတွင်း)
+                                        </small>
+                                    </div>
+
+                                    <!-- Start and End Time -->
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="StartTime" class="form-label fw-bold">
+                                            <i class="fas fa-hourglass-start text-success"></i>
+                                            @Html.DisplayNameFor(m => m.StartTime)
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-success text-white">
+                                                <i class="fas fa-play"></i>
+                                            </span>
+                                            <input asp-for="StartTime"
+                                                   type="time"
+                                                   class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="StartTime" class="text-danger"></span>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-info-circle"></i>
+                                            စာမေးပွဲစတင်ချိန် (မထည့်လည်းရပါ)
+                                        </small>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="EndTime" class="form-label fw-bold">
+                                            <i class="fas fa-hourglass-end text-danger"></i>
+                                            @Html.DisplayNameFor(m => m.EndTime)
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-danger text-white">
+                                                <i class="fas fa-stop"></i>
+                                            </span>
+                                            <input asp-for="EndTime"
+                                                   type="time"
+                                                   class="form-control" />
+                                        </div>
+                                        <span asp-validation-for="EndTime" class="text-danger"></span>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-info-circle"></i>
+                                            စာမေးပွဲပြီးဆုံးချိန် (မထည့်လည်းရပါ)
+                                        </small>
+                                    </div>
+
+                                    <!-- Location -->
+                                    <div class="col-md-12 mb-3">
+                                        <label asp-for="Location" class="form-label fw-bold">
+                                            <i class="fas fa-map-marker-alt text-secondary"></i>
+                                            @Html.DisplayNameFor(m => m.Location)
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-secondary text-white">
+                                                <i class="fas fa-location-dot"></i>
+                                            </span>
+                                            <input asp-for="Location"
+                                                   class="form-control"
+                                                   placeholder="ဥပမာ - ခန်းမ ၁၊ စာသင်ခန်း ၂၀၁၊ Online" />
+                                        </div>
+                                        <span asp-validation-for="Location" class="text-danger"></span>
+                                        <small class="form-text text-muted">
+                                            <i class="fas fa-info-circle"></i>
+                                            စာမေးပွဲကျင်းပမည့်နေရာ (ဥပမာ - ခန်းမ၊ Online Link)
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Preview Card -->
+                        <div class="card bg-dark text-white mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-eye"></i> အချက်အလက်များ အကျဉ်းချုပ်
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-md-3">
+                                        <i class="fas fa-heading fa-2x"></i>
+                                        <p class="mb-0 mt-2">
+                                            <strong>ခေါင်းစဉ်:</strong><br />
+                                            <span id="previewExamTitle" class="badge bg-info">-</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <i class="fas fa-book fa-2x"></i>
+                                        <p class="mb-0 mt-2">
+                                            <strong>သင်တန်း:</strong><br />
+                                            <span id="previewCourse" class="badge bg-success">-</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <i class="fas fa-chalkboard fa-2x"></i>
+                                        <p class="mb-0 mt-2">
+                                            <strong>အတန်း:</strong><br />
+                                            <span id="previewClass" class="badge bg-info">-</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <i class="fas fa-calendar-alt fa-2x"></i>
+                                        <p class="mb-0 mt-2">
+                                            <strong>ရက်စွဲ:</strong><br />
+                                            <span id="previewDate" class="badge bg-warning text-dark">-</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row text-center">
+                                    <div class="col-md-4">
+                                        <i class="fas fa-star fa-2x"></i>
+                                        <p class="mb-0 mt-2">
+                                            <strong>အမှတ်အများဆုံး:</strong><br />
+                                            <span id="previewMaxMarks" class="badge bg-danger">-</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <i class="fas fa-clock fa-2x"></i>
+                                        <p class="mb-0 mt-2">
+                                            <strong>အချိန်:</strong><br />
+                                            <span id="previewTime" class="badge bg-secondary">-</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <i class="fas fa-map-marker-alt fa-2x"></i>
+                                        <p class="mb-0 mt-2">
+                                            <strong>နေရာ:</strong><br />
+                                            <span id="previewLocation" class="badge bg-secondary">-</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>မှတ်ချက်:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>စာမေးပွဲခေါင်းစဉ်ကို ပြောင်းလဲနိုင်ပါသည်။</li>
+                                <li>စတင်ချိန်သည် ပြီးဆုံးချိန်ထက် စောရပါမည်။</li>
+                                <li>စာမေးပွဲရက်စွဲသည် ယနေ့ရက်ထက် နောက်ကျနိုင်ပါသည်။</li>
+                                <li>ဖျက်ထားသော စာမေးပွဲများကို Deleted စာမျက်နှာတွင် ပြန်လည်ရယူနိုင်ပါသည်။</li>
+                            </ul>
+                        </div>
+
+                        <!-- Meta Information (Created Date, etc.) -->
+                        @if (Model.CreatedDate.HasValue)
+                        {
+                            <div class="alert alert-secondary">
+                                <small>
+                                    <i class="fas fa-calendar-plus"></i> ဖန်တီးသည့်ရက်: @Model.CreatedDate.Value.ToString("yyyy-MM-dd HH:mm")
+                                </small>
+                            </div>
+                        }
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div>
+                                <button type="submit" class="btn btn-warning" id="submitBtn">
+                                    <i class="fas fa-save"></i> ပြင်ဆင်သိမ်းဆည်းမည်
+                                </button>
+                                <button type="reset" class="btn btn-secondary" id="resetBtn">
+                                    <i class="fas fa-undo"></i> ပြန်လည်စတင်မည်
+                                </button>
+                                <a asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i> မသိမ်းတော့ပါ
+                                </a>
+                            </div>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@Model.ExamPkid" class="btn btn-info">
+                                    <i class="fas fa-info-circle"></i> အသေးစိတ်ကြည့်ရန်
+                                </a>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">
+                                    <i class="fas fa-trash"></i> ဖျက်ရန်
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Related Information Card -->
+            <div class="card shadow mt-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line"></i> ဆက်စပ်အချက်အလက်များ
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="alert alert-success">
+                                <i class="fas fa-users"></i>
+                                <strong>အတန်းသားဦးရေ:</strong>
+                                <span id="studentCount" class="badge bg-success float-end">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-primary">
+                                <i class="fas fa-file-alt"></i>
+                                <strong>စုစုပေါင်းစာမေးပွဲများ:</strong>
+                                <span class="badge bg-primary float-end">ဤအတန်းအတွက်</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Course Information Modal -->
+<div class="modal fade" id="courseInfoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-book"></i> သင်တန်းအချက်အလက်
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="courseDetails">
+                    <p class="text-muted text-center">
+                        <i class="fas fa-info-circle"></i>
+                        ကျေးဇူးပြု၍ သင်တန်းတစ်ခုကို ရွေးချယ်ပါ။
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ပိတ်ရန်</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Class Information Modal -->
+<div class="modal fade" id="classInfoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-chalkboard"></i> အတန်းအချက်အလက်
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="classDetails">
+                    <p class="text-muted text-center">
+                        <i class="fas fa-info-circle"></i>
+                        ကျေးဇူးပြု၍ အတန်းတစ်ခုကို ရွေးချယ်ပါ။
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ပိတ်ရန်</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle"></i> စာမေးပွဲဖျက်ရန် အတည်ပြုချက်
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>သင်သည် <strong>@Model.ExamTitle</strong> စာမေးပွဲကို ဖျက်ရန် သေချာပါသလား?</p>
+                <p class="text-danger">
+                    <i class="fas fa-exclamation-circle"></i>
+                    သတိပြုရန် - ဖျက်ပါက ပြန်လည်ရယူနိုင်ပါသေးသည်။
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">မဖျက်တော့ပါ</button>
+                <form asp-action="Delete" method="post" style="display: inline;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.ExamPkid" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> အတည်ပြုဖျက်မည်
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function() {
+            // Initialize preview with current values
+            updatePreview();
+
+            // Load related info
+            if ($('#ClassPkid').val()) {
+                loadClassInfo($('#ClassPkid').val());
+            }
+
+            // Live preview on input changes
+            $('#ExamTitle').on('keyup change', updatePreview);
+            $('#CoursePkid').on('change', function() {
+                updatePreview();
+                loadCourseDetails($(this).val());
+            });
+            $('#ClassPkid').on('change', function() {
+                updatePreview();
+                loadClassInfo($(this).val());
+                loadClassDetails($(this).val());
+            });
+            $('#ExamDate').on('change', updatePreview);
+            $('#MaxMarks').on('change', updatePreview);
+            $('#StartTime, #EndTime').on('change', updatePreview);
+            $('#Location').on('keyup change', updatePreview);
+
+            // Preview update function
+            function updatePreview() {
+                // Exam Title
+                var title = $('#ExamTitle').val();
+                $('#previewExamTitle').text(title || '-');
+
+                // Course
+                var courseId = $('#CoursePkid').val();
+                if (courseId) {
+                    var courseName = $('#CoursePkid option:selected').text();
+                    $('#previewCourse').text(courseName);
+                } else {
+                    $('#previewCourse').text('-');
+                }
+
+                // Class
+                var classId = $('#ClassPkid').val();
+                if (classId) {
+                    var className = $('#ClassPkid option:selected').text();
+                    $('#previewClass').text(className);
+                } else {
+                    $('#previewClass').text('-');
+                }
+
+                // Date
+                var date = $('#ExamDate').val();
+                $('#previewDate').text(date || '-');
+
+                // Max Marks
+                var marks = $('#MaxMarks').val();
+                $('#previewMaxMarks').text(marks || '-');
+
+                // Time
+                var start = $('#StartTime').val();
+                var end = $('#EndTime').val();
+                if (start && end) {
+                    $('#previewTime').text(start + ' - ' + end);
+                } else if (start) {
+                    $('#previewTime').text(start + ' မှစ၍');
+                } else if (end) {
+                    $('#previewTime').text(end + ' အထိ');
+                } else {
+                    $('#previewTime').text('သတ်မှတ်မထား');
+                }
+
+                // Location
+                var location = $('#Location').val();
+                $('#previewLocation').text(location || 'သတ်မှတ်မထား');
+            }
+
+            // Load class information (student count, etc.)
+            function loadClassInfo(classId) {
+                if (!classId) return;
+
+                $.ajax({
+                    url: '@Url.Action("GetClassInfo", "Exam")',
+                    type: 'GET',
+                    data: { id: classId },
+                    success: function(data) {
+                        if (data) {
+                            $('#studentCount').text(data.studentCount + ' ဦး');
+                        }
+                    },
+                    error: function() {
+                        $('#studentCount').text('မရရှိနိုင်ပါ');
+                    }
+                });
+            }
+
+            // Load course details for modal
+            function loadCourseDetails(courseId) {
+                if (!courseId) {
+                    $('#courseDetails').html('<p class="text-muted text-center"><i class="fas fa-info-circle"></i> ကျေးဇူးပြု၍ သင်တန်းတစ်ခုကို ရွေးချယ်ပါ။</p>');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("GetCourseInfo", "Exam")',
+                    type: 'GET',
+                    data: { id: courseId },
+                    success: function(data) {
+                        if (data) {
+                            var html = '<table class="table table-sm">';
+                            html += '<tr><th>သင်တန်းအမည်:</th><td>' + (data.courseName || '-') + '</td></tr>';
+                            html += '<tr><th>သင်တန်းကုဒ်:</th><td>' + (data.courseCode || '-') + '</td></tr>';
+                            html += '<tr><th>Credits:</th><td>' + (data.credits || '-') + '</td></tr>';
+                            html += '</table>';
+                            $('#courseDetails').html(html);
+                        }
+                    },
+                    error: function() {
+                        $('#courseDetails').html('<p class="text-muted text-center"><i class="fas fa-exclamation-circle"></i> အမှားအယွင်းရှိပါသည်။</p>');
+                    }
+                });
+            }
+
+            // Load class details for modal
+            function loadClassDetails(classId) {
+                if (!classId) {
+                    $('#classDetails').html('<p class="text-muted text-center"><i class="fas fa-info-circle"></i> ကျေးဇူးပြု၍ အတန်းတစ်ခုကို ရွေးချယ်ပါ။</p>');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("GetClassInfo", "Exam")',
+                    type: 'GET',
+                    data: { id: classId },
+                    success: function(data) {
+                        if (data) {
+                            var html = '<table class="table table-sm">';
+                            html += '<tr><th>အတန်းအမည်:</th><td>' + (data.className || '-') + '</td></tr>';
+                            html += '<tr><th>အပိုင်း:</th><td>' + (data.section || '-') + '</td></tr>';
+                            html += '<tr><th>သင်နှစ်:</th><td>' + (data.year || '-') + '</td></tr>';
+                            html += '<tr><th>ကျောင်းသားဦးရေ:</th><td>' + (data.studentCount || '0') + ' ဦး</td></tr>';
+                            html += '</table>';
+                            $('#classDetails').html(html);
+                        }
+                    },
+                    error: function() {
+                        $('#classDetails').html('<p class="text-muted text-center"><i class="fas fa-exclamation-circle"></i> အမှားအယွင်းရှိပါသည်။</p>');
+                    }
+                });
+            }
+
+            // Validate time before submit
+            $('#editForm').on('submit', function(e) {
+                var startTime = $('#StartTime').val();
+                var endTime = $('#EndTime').val();
+
+                if (startTime && endTime && startTime >= endTime) {
+                    e.preventDefault();
+                    alert('စတင်ချိန်သည် ပြီးဆုံးချိန်ထက် စောရပါမည်။');
+                    return false;
+                }
+
+                // Show loading state
+                var btn = $('#submitBtn');
+                btn.html('<i class="fas fa-spinner fa-spin"></i> သိမ်းဆည်းနေပါသည်...');
+                btn.prop('disabled', true);
+            });
+
+            // Reset button
+            $('#resetBtn').on('click', function(e) {
+                e.preventDefault();
+                if (confirm('ပြင်ဆင်ထားသော အချက်အလက်များကို ပြန်လည်စတင်မှာလား?')) {
+                    location.reload();
+                }
+            });
+
+            // Prevent double submit
+            $('#editForm').on('submit', function() {
+                if ($(this).data('submitted') === true) {
+                    return false;
+                }
+                $(this).data('submitted', true);
+                return true;
+            });
+        });
+    </script>
 }

@@ -13,6 +13,8 @@ namespace StudentManagementSystem.ViewModels
 
         public string? ExamTitle { get; set; }
         public DateOnly? ExamDate { get; set; }
+        public DateOnly? CreatedDate { get; set; }
+        
 
         public int? MaxMarks { get; set; }
 

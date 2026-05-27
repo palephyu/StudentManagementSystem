@@ -1,0 +1,64 @@
+﻿@model StudentManagementSystem.ViewModels.Exam_VM
+
+@{
+    ViewData["Title"] = "စာမေးပွဲအသေးစိတ်";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <nav aria-label="breadcrumb" class="mt-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">ပင်မစာမျက်နှာ</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index">စာမေးပွဲများ</a></li>
+                    <li class="breadcrumb-item active">အသေးစိတ်</li>
+                </ol>
+            </nav>
+
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0"><i class="fas fa-info-circle"></i> စာမေးပွဲအသေးစိတ်</h4>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">စာမေးပွဲခေါင်းစဉ်</dt>
+                        <dd class="col-sm-8">@Model.ExamTitle</dd>
+
+                        <dt class="col-sm-4">သင်တန်း</dt>
+                        <dd class="col-sm-8">@Model.CourseName</dd>
+
+                        <dt class="col-sm-4">အတန်း</dt>
+                        <dd class="col-sm-8">@Model.ClassName</dd>
+
+                        <dt class="col-sm-4">စာမေးပွဲရက်စွဲ</dt>
+                        <dd class="col-sm-8">@Model.ExamDate</dd>
+
+                        <dt class="col-sm-4">အမှတ်အများဆုံး</dt>
+                        <dd class="col-sm-8">@Model.MaxMarks</dd>
+
+                        <dt class="col-sm-4">စတင်ချိန်</dt>
+                        <dd class="col-sm-8">@(Model.StartTime?.ToString("HH:mm") ?? "-")</dd>
+
+                        <dt class="col-sm-4">ပြီးဆုံးချိန်</dt>
+                        <dd class="col-sm-8">@(Model.EndTime?.ToString("HH:mm") ?? "-")</dd>
+
+                        <dt class="col-sm-4">နေရာ</dt>
+                        <dd class="col-sm-8">@(Model.Location ?? "-")</dd>
+
+                        <dt class="col-sm-4">ဖန်တီးသည့်ရက်</dt>
+                        <dd class="col-sm-8">@Model.CreatedDate</dd>
+                    </dl>
+
+                    <div class="mt-3">
+                        <a asp-action="Edit" asp-route-id="@Model.ExamPkid" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> ပြင်ဆင်ရန်
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> နောက်သို့
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
